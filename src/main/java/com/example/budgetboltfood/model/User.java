@@ -16,18 +16,17 @@ public class User
     protected String name;
     protected String surname;
     protected String phoneNumber;
-    protected LocalDate BirthDate;
     protected LocalDate dateCreated;
     protected LocalDate dateUpdated;
     protected boolean isAdmin;
 
-    public User ( String email, String password, String name, String surname, String phoneNumber, LocalDate birthDate) {
+    public User ( String email, String password, String name, String surname, String phoneNumber)
+    {
         this.email = email;
         this.password = password;
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
-        BirthDate = birthDate;
     }
 
 }

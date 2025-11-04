@@ -6,8 +6,9 @@ public class Admin extends User
 {
     protected boolean isAdmin;
 
-    public Admin( String email, String password, String name, String surname, String phoneNumber, LocalDate birthDate, boolean isAdmin) {
-        super( email, password, name, surname, phoneNumber, birthDate);
+    public Admin( String email, String password, String name, String surname, String phoneNumber,boolean isAdmin)
+    {
+        super( email, password, name, surname, phoneNumber);
         this.isAdmin = isAdmin;
     }
 }

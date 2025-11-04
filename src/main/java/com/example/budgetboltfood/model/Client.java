@@ -13,13 +13,16 @@ import java.util.List;
 public class Client extends User
 {
     protected String address;
+    protected LocalDate BirthDate;
     protected List<Cart> myOrders;
     protected List<Review> myReviews;
     protected List<Review> feedback;
 
-    public Client( String email, String password, String name, String surname, String phoneNumber, LocalDate birthDate, String address) {
-        super( email, password, name, surname, phoneNumber, birthDate); // TEVINES KLASES INSTRUKTORIUS
+    public Client( String email, String password, String name, String surname, String phoneNumber, LocalDate birthDate, String address)
+    {
+        super( email, password, name, surname, phoneNumber); // TEVINES KLASES INSTRUKTORIUS
         this.address = address;
+        this.BirthDate = birthDate;
         this.myReviews = new ArrayList<>();
         this.myOrders = new ArrayList<>();
         this.feedback = new ArrayList<>();

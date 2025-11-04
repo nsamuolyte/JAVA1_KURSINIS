@@ -12,7 +12,8 @@ public class Cart
     protected LocalDate dateCreated;
     protected CartState cartState;
 
-    public Cart(int quantity, double totalPrice, LocalDate dateCreated, CartState cartState) {
+    public Cart(int quantity, double totalPrice, LocalDate dateCreated, CartState cartState)
+    {
         this.quantity = quantity;
         this.totalPrice = totalPrice;
         this.dateCreated = dateCreated;
