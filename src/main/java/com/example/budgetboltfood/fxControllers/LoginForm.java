@@ -31,7 +31,7 @@ public class LoginForm
         stage.show();
     }
 
-
-    public void registerBT(ActionEvent actionEvent) {
+    public void registerBT(ActionEvent actionEvent)
+    {
     }
 }

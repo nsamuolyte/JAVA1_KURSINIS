@@ -1,14 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.budgetboltfood.fxControllers.MainForm"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TabPane layoutY="30.0" prefHeight="514.0" prefWidth="679.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Users Managment">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="483.0" prefWidth="686.0">
+                     <children>
+                        <Accordion layoutX="1.0" layoutY="19.0" prefHeight="407.0" prefWidth="617.0">
+                          <panes>
+                              <TitledPane animated="false" text="Driver">
+                                 <content>
+                                    <TableView prefHeight="315.0" prefWidth="605.0">
+                                       <columns>
+                                          <TableColumn prefWidth="63.730682373046875" text="ID" />
+                                          <TableColumn prefWidth="105.76933288574219" text="NAME" />
+                                          <TableColumn prefWidth="101.42886352539062" text="EMAIL" />
+                                          <TableColumn prefWidth="94.42279052734375" text="PASSWORD" />
+                                          <TableColumn prefWidth="95.35162353515625" text="PHONE" />
+                                          <TableColumn prefWidth="93.78656005859375" text="DELETE" />
+                                       </columns>
+                                    </TableView>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" text="Restaurant">
+                                 <content>
+                                    <TableView prefHeight="200.0" prefWidth="200.0">
+                                       <columns>
+                                          <TableColumn prefWidth="63.730682373046875" text="ID" />
+                                          <TableColumn prefWidth="105.76933288574219" text="NAME" />
+                                          <TableColumn prefWidth="101.42886352539062" text="EMAIL" />
+                                          <TableColumn prefWidth="94.42279052734375" text="PASSWORD" />
+                                          <TableColumn prefWidth="95.35162353515625" text="PHONE" />
+                                          <TableColumn prefWidth="93.78656005859375" text="DELETE" />
+                                       </columns>
+                                    </TableView>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" text="Admin">
+                                 <content>
+                                    <TableView prefHeight="200.0" prefWidth="200.0">
+                                       <columns>
+                                          <TableColumn prefWidth="63.730682373046875" text="ID" />
+                                          <TableColumn prefWidth="105.76933288574219" text="NAME" />
+                                          <TableColumn prefWidth="101.42886352539062" text="EMAIL" />
+                                          <TableColumn prefWidth="94.42279052734375" text="PASSWORD" />
+                                          <TableColumn prefWidth="95.35162353515625" text="PHONE" />
+                                          <TableColumn prefWidth="93.78656005859375" text="DELETE" />
+                                       </columns>
+                                    </TableView>
+                                 </content>
+                              </TitledPane>
+                            <TitledPane animated="false" text="Client">
+                                 <content>
+                                    <TableView prefHeight="200.0" prefWidth="200.0">
+                                      <columns>
+                                        <TableColumn prefWidth="63.730682373046875" text="ID" />
+                                        <TableColumn prefWidth="105.76933288574219" text="NAME" />
+                                          <TableColumn prefWidth="101.42886352539062" text="EMAIL" />
+                                          <TableColumn prefWidth="94.42279052734375" text="PASSWORD" />
+                                          <TableColumn prefWidth="95.35162353515625" text="PHONE" />
+                                          <TableColumn prefWidth="93.78656005859375" text="DELETE" />
+                                      </columns>
+                                    </TableView>
+                                 </content>
+                              </TitledPane>
+                          </panes>
+                        </Accordion>
+                        <Button fx:id="newUserAdd" layoutX="612.0" layoutY="438.0" mnemonicParsing="false" onAction="#newUserAddBT" text="Add New">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Orders Managment">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView layoutX="9.0" layoutY="15.0" prefHeight="440.0" prefWidth="200.0" />
+                        <ComboBox layoutX="230.0" layoutY="16.0" prefWidth="150.0" promptText="STATUS" />
+                        <ComboBox layoutX="232.0" layoutY="58.0" prefWidth="150.0" promptText="DRIVER" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Menu Managment">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView layoutX="24.0" layoutY="25.0" prefHeight="432.0" prefWidth="200.0" />
+                        <ComboBox layoutX="250.0" layoutY="26.0" prefWidth="150.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Button fx:id="signOut" layoutX="592.0" layoutY="4.0" mnemonicParsing="false" onAction="#signOutBT" text="Sign out">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>

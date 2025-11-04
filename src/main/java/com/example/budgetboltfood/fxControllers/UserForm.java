@@ -6,12 +6,17 @@ import com.example.budgetboltfood.model.VehicleModel;
 import com.example.budgetboltfood.model.VehicleType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
-import java.io.PrintStream;
+import java.io.IOException;
 
-public class UserForm
-{
+public class UserForm {
+
     @FXML
     public TextField nameField;
     @FXML
@@ -41,24 +46,81 @@ public class UserForm
     @FXML
     public DatePicker calendarLE;
     @FXML
-    private ComboBox<VehicleModel> carMakeBox;
+    public ComboBox<VehicleModel> carMakeBox;
     @FXML
-    private ComboBox<VehicleColor> carColourBox;
+    public ComboBox<VehicleColor> carColourBox;
     @FXML
     public TextField carPatesField;
 
-    public void createUser()
-    {
-        User user = new User(nameField.getText(), surnameField.getText(), emailField.getText(), phoneField.getText(), pwField.getText());
-        PrintStream out = System.out;
-        out.println(user);
-    }
-    public void cancel() {}
+    // ==============================================================
+    // CREATE NEW USER + REDIRECT TO LOGIN FORM
+    // ==============================================================
 
-    public void disableFields()
-    {
-        if (userRB.isSelected())
-        {
+    @FXML
+    public void createUser(ActionEvent event) {
+        try {
+            // Create different user types depending on selection
+            if (userRB.isSelected()) {
+                User user = new User(
+                        nameField.getText(),
+                        surnameField.getText(),
+                        emailField.getText(),
+                        phoneField.getText(),
+                        pwField.getText()
+                );
+                System.out.println("Created user: " + user);
+
+            } else if (driverRB.isSelected()) {
+                System.out.println("Created driver: "
+                        + nameField.getText() + " " + surnameField.getText()
+                        + " - " + carTypeBox.getValue() + " / " + carMakeBox.getValue()
+                        + " / " + carColourBox.getValue() + " plate: " + carPatesField.getText());
+            } else if (adminRB.isSelected()) {
+                System.out.println("Created admin: " + nameField.getText() + " " + surnameField.getText());
+            } else if (restaurantRB.isSelected()) {
+                System.out.println("Created restaurant account: " + emailField.getText() + " / address: " + adressField.getText());
+            }
+
+            // =============================
+            // After creation → go to login
+            // =============================
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/login-form.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ==============================================================
+    // CANCEL BUTTON
+    // ==============================================================
+
+    @FXML
+    public void cancel(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/login-form.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ==============================================================
+    // FIELD VISIBILITY HANDLING
+    // ==============================================================
+
+    public void disableFields() {
+        if (userRB.isSelected()) {
             // enable
             nameField.setVisible(true);
             surnameField.setVisible(true);
@@ -73,9 +135,7 @@ public class UserForm
             carColourBox.setVisible(false);
             carPatesField.setVisible(false);
             calendarLE.setVisible(false);
-        }
-        else if (driverRB.isSelected())
-        {
+        } else if (driverRB.isSelected()) {
             // enable
             nameField.setVisible(true);
             surnameField.setVisible(true);
@@ -90,9 +150,7 @@ public class UserForm
             calendarLE.setVisible(true);
             // disable
             adressField.setVisible(false);
-        }
-        else if (adminRB.isSelected())
-        {
+        } else if (adminRB.isSelected()) {
             // enable
             nameField.setVisible(true);
             surnameField.setVisible(true);
@@ -107,9 +165,7 @@ public class UserForm
             carColourBox.setVisible(false);
             carPatesField.setVisible(false);
             calendarLE.setVisible(false);
-        }
-        else if (restaurantRB.isSelected())
-        {
+        } else if (restaurantRB.isSelected()) {
             // enable
             nameField.setVisible(true);
             emailField.setVisible(true);
@@ -127,9 +183,12 @@ public class UserForm
         }
     }
 
+    // ==============================================================
+    // COMBOBOX INITIALIZATION
+    // ==============================================================
 
-    public void initialize() //droplistai
-    {
+    @FXML
+    public void initialize() {
         carTypeBox.getItems().setAll(VehicleType.values());
         carMakeBox.getItems().setAll(VehicleModel.values());
         carColourBox.getItems().setAll(VehicleColor.values());
