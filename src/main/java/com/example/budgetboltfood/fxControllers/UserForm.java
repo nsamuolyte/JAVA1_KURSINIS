@@ -14,8 +14,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public class UserForm {
+public class UserForm implements Serializable {
 
     @FXML
     public TextField nameField;
@@ -52,10 +53,6 @@ public class UserForm {
     @FXML
     public TextField carPatesField;
 
-    // ==============================================================
-    // CREATE NEW USER + REDIRECT TO LOGIN FORM
-    // ==============================================================
-
     @FXML
     public void createUser(ActionEvent event) {
         try {
@@ -70,20 +67,22 @@ public class UserForm {
                 );
                 System.out.println("Created user: " + user);
 
-            } else if (driverRB.isSelected()) {
+            }
+            else if (driverRB.isSelected())
+            {
                 System.out.println("Created driver: "
                         + nameField.getText() + " " + surnameField.getText()
                         + " - " + carTypeBox.getValue() + " / " + carMakeBox.getValue()
                         + " / " + carColourBox.getValue() + " plate: " + carPatesField.getText());
-            } else if (adminRB.isSelected()) {
+            }
+            else if (adminRB.isSelected())
+            {
                 System.out.println("Created admin: " + nameField.getText() + " " + surnameField.getText());
-            } else if (restaurantRB.isSelected()) {
+            }
+            else if (restaurantRB.isSelected()) {
                 System.out.println("Created restaurant account: " + emailField.getText() + " / address: " + adressField.getText());
             }
 
-            // =============================
-            // After creation → go to login
-            // =============================
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/login-form.fxml"));
             Parent root = loader.load();
 
@@ -96,10 +95,6 @@ public class UserForm {
             e.printStackTrace();
         }
     }
-
-    // ==============================================================
-    // CANCEL BUTTON
-    // ==============================================================
 
     @FXML
     public void cancel(ActionEvent event) {
@@ -114,10 +109,6 @@ public class UserForm {
             e.printStackTrace();
         }
     }
-
-    // ==============================================================
-    // FIELD VISIBILITY HANDLING
-    // ==============================================================
 
     public void disableFields() {
         if (userRB.isSelected()) {
@@ -182,10 +173,6 @@ public class UserForm {
             calendarBD.setVisible(false);
         }
     }
-
-    // ==============================================================
-    // COMBOBOX INITIALIZATION
-    // ==============================================================
 
     @FXML
     public void initialize() {
