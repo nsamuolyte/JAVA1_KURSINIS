@@ -20,7 +20,7 @@ public class Admin extends User
 
     public Admin( String email, String password, String name, String surname, String phoneNumber,boolean isAdmin)
     {
-        super( email, password, name, surname, phoneNumber);
+        super( email, password, name, phoneNumber);
         this.isAdmin = isAdmin;
     }
 }

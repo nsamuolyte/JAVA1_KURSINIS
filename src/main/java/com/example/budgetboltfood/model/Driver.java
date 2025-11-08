@@ -19,21 +19,24 @@ public class Driver extends User
 {
     protected double rating;
     protected LocalDate BirthDate;
+    protected String surname;
     protected VehicleType vehicleType;
     protected String vehiclePlate;
     protected VehicleModel vehicleModel;
     protected VehicleColor vehicleColor;
-    protected int DriverLicenseNumber;
-    protected LocalDate LicenseExpiration;
+    protected String VehiclesPlates;
 
-    public Driver( String email, String password, String name, String surname, String phoneNumber, LocalDate birthDate, List<Review> myReviews, double rating, VehicleType vehicleType, String vehiclePlate, VehicleModel vehicleModel, VehicleColor vehicleColor, int driverLicenseNumber, LocalDate licenseExpiration) {
-        super( email, password, name, surname, phoneNumber);
-        this.rating = rating;
+
+    public Driver( String email, String password, String name, String surname, String phoneNumber,
+                   LocalDate birthDate, VehicleType vehicleType, String vehiclesPlates,
+                   VehicleModel vehicleModel, VehicleColor vehicleColor) {
+        super( email, password, name, phoneNumber);
+        this.surname = surname;
+        this.BirthDate = birthDate;
         this.vehicleType = vehicleType;
         this.vehiclePlate = vehiclePlate;
         this.vehicleModel = vehicleModel;
         this.vehicleColor = vehicleColor;
-        DriverLicenseNumber = driverLicenseNumber;
-        LicenseExpiration = licenseExpiration;
+        this.VehiclesPlates = vehiclesPlates;
     }
 }

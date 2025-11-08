@@ -22,7 +22,7 @@
             <ToggleGroup fx:id="userType" />
          </toggleGroup></RadioButton>
       <RadioButton fx:id="adminRB" layoutX="113.0" layoutY="287.0" mnemonicParsing="false" onAction="#disableFields" text="Admin" toggleGroup="$userType" />
-      <RadioButton fx:id="userRB" layoutX="26.0" layoutY="257.0" mnemonicParsing="false" onAction="#disableFields" text="User" toggleGroup="$userType" />
+      <RadioButton fx:id="clientRB" layoutX="26.0" layoutY="257.0" mnemonicParsing="false" onAction="#disableFields" text="Client" toggleGroup="$userType" />
       <RadioButton fx:id="restaurantRB" layoutX="112.0" layoutY="257.0" mnemonicParsing="false" onAction="#disableFields" text="Restaurant" toggleGroup="$userType" />
       <Button cacheShape="false" cancelButton="true" centerShape="false" focusTraversable="false" layoutX="122.0" layoutY="347.0" mnemonicParsing="false" onAction="#cancel" scaleShape="false" text="CANCEL" />
       <DatePicker fx:id="calendarBD" layoutX="27.0" layoutY="212.0" promptText="Birthday" />
@@ -32,5 +32,7 @@
       <ComboBox fx:id="carColourBox" layoutX="240.0" layoutY="126.0" prefWidth="150.0" promptText="Car Colour" />
       <DatePicker fx:id="calendarLE" layoutX="225.0" layoutY="212.0" promptText="License Expiration" />
       <TextField fx:id="carPatesField" layoutX="235.0" layoutY="169.0" promptText="Car plate" />
+      <ComboBox fx:id="cuisineTypeField" layoutX="240.0" layoutY="259.0" prefWidth="150.0" promptText="Cuisine Type" />
+      <ComboBox fx:id="restaurantStatus" layoutX="239.0" layoutY="296.0" prefHeight="28.0" prefWidth="189.0" promptText="Restaurant status" />
    </children>
 </AnchorPane>
