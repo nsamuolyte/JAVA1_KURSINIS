@@ -179,4 +179,7 @@ public class UserForm implements Serializable {
         carColourBox.getItems().setAll(VehicleColor.values());
         cuisineTypeField.getItems().setAll(CuisineType.values());
     }
+
+    public void cancel(ActionEvent event) {
+    }
 }
