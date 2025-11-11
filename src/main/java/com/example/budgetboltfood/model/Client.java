@@ -29,7 +29,7 @@ public class Client extends User
 
     public Client( String email, String password, String name, String surname, String phoneNumber, LocalDate birthDate, String address)
     {
-        super( email, password, name, phoneNumber); // TEVINES KLASES INSTRUKTORIUS
+        super( email, password, name, phoneNumber);
         this.surname = surname;
         this.address = address;
         this.BirthDate = birthDate;

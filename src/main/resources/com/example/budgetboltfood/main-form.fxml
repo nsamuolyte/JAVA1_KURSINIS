@@ -14,12 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity"
-      minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="533.0" prefWidth="687.0"
-      xmlns="http://javafx.com/javafx/25"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.budgetboltfood.fxControllers.MainForm">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budgetboltfood.fxControllers.MainForm">
    <children>
       <TabPane layoutY="30.0" prefHeight="514.0" prefWidth="679.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -123,7 +118,7 @@
             </Tab>
         </tabs>
       </TabPane>
-      <Button fx:id="signOut" layoutX="592.0" layoutY="4.0" mnemonicParsing="false" onAction="#signOutBT" text="Sign out">
+      <Button fx:id="signOutBT" layoutX="592.0" layoutY="4.0" mnemonicParsing="false" onAction="#signOut" text="Sign out">
          <font>
             <Font size="11.0" />
          </font>

@@ -1,5 +1,6 @@
 package com.example.budgetboltfood.fxControllers;
 
+import com.example.budgetboltfood.HelloApplication;
 import com.example.budgetboltfood.hibernateControl.GenericHibernate;
 import com.example.budgetboltfood.model.*;
 import jakarta.persistence.EntityManagerFactory;
@@ -181,7 +182,17 @@ public class UserForm implements Serializable {
         restaurantStatus.getItems().setAll(RestaurantStatus.values());
     }
 
-    public void cancel(ActionEvent event) {
+    public void cancel(ActionEvent event) throws IOException
+    {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-form.fxml"));
+        Parent root = fxmlLoader.load();
+
+        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Login");
+        stage.show();
+
     }
 
 }
