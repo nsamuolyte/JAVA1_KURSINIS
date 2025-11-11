@@ -70,9 +70,6 @@ public class UserForm implements Serializable {
     @FXML
     public void createUser()
     {
-        User user = new User(emailField.getText(), pwField.getText(), nameField.getText(), phoneField.getText());
-        genericHibernate.create(user);
-
         if (clientRB.isSelected()) {
             Client client = new Client (emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), adressField.getText());
             genericHibernate.create(client);

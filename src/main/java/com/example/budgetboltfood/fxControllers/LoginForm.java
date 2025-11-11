@@ -25,6 +25,7 @@ public class LoginForm
     @FXML
     public TextField passwordField;
 
+
     private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("login");
 
 
@@ -47,7 +48,6 @@ public class LoginForm
             }
 
     }
-
 
 
     public void registerBT() throws IOException {

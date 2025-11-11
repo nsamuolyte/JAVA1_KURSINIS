@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -24,8 +25,11 @@ import java.util.List;
 
 public class MainForm
 {
+    @FXML
+    private TabPane mainTabPane;
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
+    private User loggedInUser;
 
 
     @FXML private TableColumn<Admin, Integer> adminIdColumn;
@@ -77,26 +81,12 @@ public class MainForm
     @FXML
     public TableView<Driver> driverTableView;
 
-    public void userManagementTab(Event event)
-    {
-    }
+    public void newUserAddBT(ActionEvent event) {}
+    public void DeleteBT(ActionEvent event){}
 
-    public void newUserAddBT(ActionEvent event)
-    {
-    }
-
-    public void DeleteBT(ActionEvent event)
-    {
-        
-    }
-
-    public void orderManagementTab(Event event)
-    {
-    }
-
-    public void menuManagementTab(Event event)
-    {
-    }
+    public void userManagementTab(Event event){}
+    public void orderManagementTab(Event event){}
+    public void menuManagementTab(Event event){}
 
     public void signOut(ActionEvent event) throws IOException
     {
@@ -114,7 +104,7 @@ public class MainForm
         entityManagerFactory = Persistence.createEntityManagerFactory("login");
         loadAllData();
 
-        //patikra kur gryba pjauam
+        //patikra a kur gryba pjauam
         EntityManager em = entityManagerFactory.createEntityManager();
         List<User> users = em.createQuery("from User", User.class).getResultList();
         System.out.println("Found users: " + users.size());
@@ -154,9 +144,6 @@ public class MainForm
     private void loadAllData() {
         EntityManager em = entityManagerFactory.createEntityManager();
 
-        //List<Admin> admins = em.createQuery("FROM Admin", Admin.class).getResultList();
-        //adminTableView.getItems().setAll(admins);
-
         List<Admin> admins = em.createQuery("from Admin", Admin.class).getResultList();
         adminTableView.setItems(FXCollections.observableList(admins));
 
@@ -172,5 +159,30 @@ public class MainForm
         em.close();
 
     }
+
+    public void setData(EntityManagerFactory entityManagerFactory, User user) {
+        this.entityManagerFactory = entityManagerFactory;
+        this.loggedInUser = user;
+
+        restrictAccessByRole(); // automatiškai pritaikys teises pagal tipą
+    }
+    private void restrictAccessByRole() {
+        if (loggedInUser == null) return;
+
+        // Jei vartotojas nėra adminas — paslepiam tabus
+        if (!(loggedInUser.getClass().getSimpleName().equals("Admin")))
+        {
+            mainTabPane.getTabs().removeAll(userManagement, orderManagement, menuManagement);
+        }
+    }
+
+
+
+
+    //CRAZZY???
+    //I WAS CRAZY ONCE
+    //THEY LOCKED ME IN A ROOM
+    //IN A RUBBER ROOM
+    //IN A RUBBER ROOM FILLED WITH RATS
 
 }

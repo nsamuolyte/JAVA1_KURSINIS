@@ -16,8 +16,9 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budgetboltfood.fxControllers.MainForm">
    <children>
-      <TabPane layoutY="30.0" prefHeight="514.0" prefWidth="679.0" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
+       <TabPane fx:id="mainTabPane" layoutY="30.0" prefHeight="514.0" prefWidth="679.0" tabClosingPolicy="UNAVAILABLE">
+
+       <tabs>
           <Tab fx:id="userManagement" onSelectionChanged="#userManagementTab" text="Users Managment">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="483.0" prefWidth="686.0">
