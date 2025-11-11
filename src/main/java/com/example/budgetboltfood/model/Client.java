@@ -1,9 +1,9 @@
 package com.example.budgetboltfood.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -12,6 +12,10 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@DiscriminatorValue("Client")
 
 public class Client extends User
 {
@@ -21,11 +25,11 @@ public class Client extends User
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<Cart> myOrders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "commentOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    /*@OneToMany(mappedBy = "commentOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<Review> myReviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "feedbackReceiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    protected List<Review> feedback = new ArrayList<>();
+    protected List<Review> feedback = new ArrayList<>();*/
 
     public Client( String email, String password, String name, String surname, String phoneNumber, LocalDate birthDate, String address)
     {
@@ -33,8 +37,8 @@ public class Client extends User
         this.surname = surname;
         this.address = address;
         this.BirthDate = birthDate;
-        this.myReviews = new ArrayList<>();
+        //this.myReviews = new ArrayList<>();
         this.myOrders = new ArrayList<>();
-        this.feedback = new ArrayList<>();
+        //this.feedback = new ArrayList<>();
     }
 }

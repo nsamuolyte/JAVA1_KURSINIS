@@ -1,5 +1,6 @@
 package com.example.budgetboltfood.model;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@DiscriminatorValue("Admin") // bus įrašyta į DTYPE stulpelį
 
 public class Admin extends User
 {

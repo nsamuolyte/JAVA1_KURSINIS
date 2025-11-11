@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@DiscriminatorValue("Restaurant")
 
 public class Restaurant extends User
 {
@@ -25,12 +26,6 @@ public class Restaurant extends User
     @Enumerated
     protected RestaurantStatus restaurantStatus;
 
-   /* @OneToMany (mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Cart> orders;
-    //@OneToMany (mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //private List<Review> reviews;
-    @OneToMany (mappedBy = "restaurantMenu", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Cuisine> menu;*/
 
     public Restaurant(String email, String password, String name, String phoneNumber, String restaurantAddress, CuisineType cuisineType, RestaurantStatus restaurantStatus) {
         super(email, password, name, phoneNumber);
