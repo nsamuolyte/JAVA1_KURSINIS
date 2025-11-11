@@ -13,7 +13,8 @@ module com.example.budgetboltfood {
         requires org.kordamp.bootstrapfx.core;
         requires java.desktop;
         requires javafx.graphics;
-    requires javafx.base;
+        requires javafx.base;
+
 
     opens com.example.budgetboltfood to javafx.fxml, org.hibernate.orm.core, jakarta.persistence;
         exports com.example.budgetboltfood;

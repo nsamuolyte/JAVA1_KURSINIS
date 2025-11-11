@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -13,7 +14,12 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="533.0" prefWidth="687.0"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.budgetboltfood.fxControllers.MainForm">
    <children>
       <TabPane layoutY="30.0" prefHeight="514.0" prefWidth="679.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -21,22 +27,8 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="483.0" prefWidth="686.0">
                      <children>
-                        <Accordion layoutX="1.0" layoutY="19.0" prefHeight="407.0" prefWidth="617.0">
+                        <Accordion layoutX="24.0" layoutY="14.0" prefHeight="407.0" prefWidth="617.0">
                           <panes>
-                              <TitledPane animated="false" text="Driver">
-                                 <content>
-                                    <TableView prefHeight="315.0" prefWidth="605.0">
-                                       <columns>
-                                          <TableColumn prefWidth="63.730682373046875" text="ID" />
-                                          <TableColumn prefWidth="105.76933288574219" text="NAME" />
-                                          <TableColumn prefWidth="101.42886352539062" text="EMAIL" />
-                                          <TableColumn prefWidth="94.42279052734375" text="PASSWORD" />
-                                          <TableColumn prefWidth="95.35162353515625" text="PHONE" />
-                                          <TableColumn prefWidth="93.78656005859375" text="DELETE" />
-                                       </columns>
-                                    </TableView>
-                                 </content>
-                              </TitledPane>
                               <TitledPane animated="false" text="Restaurant">
                                  <content>
                                     <TableView prefHeight="200.0" prefWidth="200.0">
@@ -46,12 +38,13 @@
                                           <TableColumn prefWidth="101.42886352539062" text="EMAIL" />
                                           <TableColumn prefWidth="94.42279052734375" text="PASSWORD" />
                                           <TableColumn prefWidth="95.35162353515625" text="PHONE" />
-                                          <TableColumn prefWidth="93.78656005859375" text="DELETE" />
+                                          <TableColumn prefWidth="96.0" text="PAST ORDERS" />
+                                          <TableColumn prefWidth="73.0" text="DELETE" />
                                        </columns>
                                     </TableView>
                                  </content>
                               </TitledPane>
-                              <TitledPane animated="false" text="Admin">
+                              <TitledPane animated="false" prefHeight="347.0" prefWidth="617.0" text="Admin">
                                  <content>
                                     <TableView prefHeight="200.0" prefWidth="200.0">
                                        <columns>
@@ -65,7 +58,7 @@
                                     </TableView>
                                  </content>
                               </TitledPane>
-                            <TitledPane animated="false" text="Client">
+                            <TitledPane animated="false" prefHeight="333.0" prefWidth="617.0" text="Client">
                                  <content>
                                     <TableView prefHeight="200.0" prefWidth="200.0">
                                       <columns>
@@ -74,8 +67,24 @@
                                           <TableColumn prefWidth="101.42886352539062" text="EMAIL" />
                                           <TableColumn prefWidth="94.42279052734375" text="PASSWORD" />
                                           <TableColumn prefWidth="95.35162353515625" text="PHONE" />
+                                          <TableColumn prefWidth="96.0" text="PAST ORDERS" />
                                           <TableColumn prefWidth="93.78656005859375" text="DELETE" />
                                       </columns>
+                                    </TableView>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" text="Driver">
+                                 <content>
+                                    <TableView prefHeight="315.0" prefWidth="605.0">
+                                       <columns>
+                                          <TableColumn prefWidth="63.730682373046875" text="ID" />
+                                          <TableColumn prefWidth="105.76933288574219" text="NAME" />
+                                          <TableColumn prefWidth="101.42886352539062" text="EMAIL" />
+                                          <TableColumn prefWidth="94.42279052734375" text="PASSWORD" />
+                                          <TableColumn prefWidth="95.35162353515625" text="PHONE" />
+                                          <TableColumn prefWidth="96.0" text="PAST ORDERS" />
+                                          <TableColumn prefWidth="93.78656005859375" text="DELETE" />
+                                       </columns>
                                     </TableView>
                                  </content>
                               </TitledPane>
@@ -107,6 +116,7 @@
                      <children>
                         <ListView layoutX="24.0" layoutY="25.0" prefHeight="432.0" prefWidth="200.0" />
                         <ComboBox layoutX="250.0" layoutY="26.0" prefWidth="150.0" />
+                        <Label layoutX="24.0" layoutY="6.0" text="My menu:" />
                      </children>
                   </AnchorPane>
                </content>

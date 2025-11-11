@@ -2,6 +2,8 @@ package com.example.budgetboltfood.fxControllers;
 
 
 import com.example.budgetboltfood.HelloApplication;
+import com.example.budgetboltfood.hibernateControl.CustomHibernate;
+import com.example.budgetboltfood.model.User;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import javafx.event.ActionEvent;
@@ -29,9 +31,11 @@ public class LoginForm
     //NEVEIKIA
     //NEVEIKIA
 
-    public void loginBT(ActionEvent actionEvent) {
+    public void loginBT() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-form.fxml"));
+            CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+            User user = customHibernate.getUserByUsername(emailField.getText(), passwordField.getText());
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/main-form.fxml"));
             Parent parent = fxmlLoader.load();
             Scene scene = new Scene(parent);
             Stage stage = (Stage) passwordField.getScene().getWindow();

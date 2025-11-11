@@ -12,4 +12,7 @@ public class MainForm
 {
     public void signOutBT() throws IOException {
     }
+
+    public void newUserAddBT(ActionEvent event) {
+    }
 }
