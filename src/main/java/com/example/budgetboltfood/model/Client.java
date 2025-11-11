@@ -1,5 +1,8 @@
 package com.example.budgetboltfood.model;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,12 +15,17 @@ import java.util.List;
 
 public class Client extends User
 {
-    protected String surname;
     protected String address;
     protected LocalDate BirthDate;
-    protected List<Cart> myOrders;
-    protected List<Review> myReviews;
-    protected List<Review> feedback;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<Cart> myOrders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "commentOwner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<Review> myReviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "feedbackReceiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<Review> feedback = new ArrayList<>();
 
     public Client( String email, String password, String name, String surname, String phoneNumber, LocalDate birthDate, String address)
     {

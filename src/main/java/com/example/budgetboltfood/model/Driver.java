@@ -1,6 +1,6 @@
 package com.example.budgetboltfood.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +20,17 @@ public class Driver extends User
     protected double rating;
     protected LocalDate BirthDate;
     protected String surname;
+    @Enumerated
     protected VehicleType vehicleType;
     protected String vehiclePlate;
+    @Enumerated
     protected VehicleModel vehicleModel;
+    @Enumerated
     protected VehicleColor vehicleColor;
     protected String VehiclesPlates;
+
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cart> orders;
 
 
     public Driver( String email, String password, String name, String surname, String phoneNumber,

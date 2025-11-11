@@ -1,13 +1,12 @@
 package com.example.budgetboltfood.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +25,12 @@ public class Cuisine
     protected Ingriedients ingriedients;
     protected Alergens alergens;
     protected PortionSize portionSize;
+
+    @ManyToMany (mappedBy = "menu", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cart> orderList;
+
+    @ManyToOne
+    private Restaurant restaurantManu;
 
     public Cuisine(CuisineType cuisineType, String description, Ingriedients ingriedients, Alergens alergens, PortionSize portionSize) {
         this.cuisineType = cuisineType;

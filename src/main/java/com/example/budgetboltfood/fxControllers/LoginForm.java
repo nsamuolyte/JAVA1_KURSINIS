@@ -4,6 +4,7 @@ package com.example.budgetboltfood.fxControllers;
 import com.example.budgetboltfood.HelloApplication;
 import com.example.budgetboltfood.hibernateControl.CustomHibernate;
 import com.example.budgetboltfood.model.User;
+import com.example.budgetboltfood.utils.FxUtils;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -25,23 +27,25 @@ public class LoginForm
 
     private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("login");
 
-    public void validateAndLoad() throws IOException {}
 
-    public void loginBT() {
-        try {
+    public void loginBT() throws IOException{
             CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
             User user = customHibernate.getUserByUsername(emailField.getText(), passwordField.getText());
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/main-form.fxml"));
-            Parent parent = fxmlLoader.load();
+            if(user != null)
+            {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/main-form.fxml"));
+                Parent parent = fxmlLoader.load();
 
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) passwordField.getScene().getWindow();
-            stage.setTitle("Main Form");
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                Scene scene = new Scene(parent);
+                Stage stage = (Stage) passwordField.getScene().getWindow();
+                stage.setTitle("Main Form");
+                stage.setScene(scene);
+                stage.show();
+            } else
+            {
+                FxUtils.generateAlert(Alert.AlertType.ERROR, "Error!", "Login error!", "Invalid username or password!");
+            }
+
     }
 
 

@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,13 +30,13 @@ public class User implements Serializable
     protected LocalDate dateUpdated;
     protected boolean isAdmin;
 
+
     public User ( String email, String password, String name, String phoneNumber)
     {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
-
     }
 
 }

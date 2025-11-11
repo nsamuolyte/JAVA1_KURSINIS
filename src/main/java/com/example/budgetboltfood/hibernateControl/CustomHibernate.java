@@ -27,7 +27,7 @@ public class CustomHibernate extends GenericHibernate{
             CriteriaQuery<User> query = cb.createQuery(User.class);
             Root<User> root = query.from(User.class);
 
-            query.select(root).where(cb.and(cb.equal(root.get("login"), login),
+            query.select(root).where(cb.and(cb.equal(root.get("email"), login),
                     cb.equal(root.get("password"), password)));
             Query q = entityManager.createQuery(query);
             user = (User)q.getSingleResult();

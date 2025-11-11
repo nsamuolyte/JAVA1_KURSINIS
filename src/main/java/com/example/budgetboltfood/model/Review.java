@@ -1,9 +1,6 @@
 package com.example.budgetboltfood.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +25,9 @@ public class Review
     protected int targetId;
     protected int userId;
     protected LocalDate dateCreated;
+
+    //@ManyToOne
+    //private User commentOwner;
 
     public Review( double stars, String comment, TargetType targetType, int targetId, int userId) {
         this.stars = stars;
