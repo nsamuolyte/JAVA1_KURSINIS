@@ -1,5 +1,6 @@
 package com.example.budgetboltfood.hibernateControl;
 
+import com.example.budgetboltfood.model.Cuisine;
 import com.example.budgetboltfood.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -20,11 +21,11 @@ public class GenericHibernate {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    public void createUser(User user) {
+    public <T> void create (T entity) {
         try{
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            entityManager.persist(user); //INSERT
+            entityManager.persist(entity); //INSERT
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

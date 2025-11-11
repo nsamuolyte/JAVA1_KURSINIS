@@ -25,11 +25,6 @@ public class LoginForm
 
     private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("login");
 
-    //NEVEIKIA
-    //NEVEIKIA
-    //NEVEIKIA
-    //NEVEIKIA
-    //NEVEIKIA
     public void validateAndLoad() throws IOException {}
 
     public void loginBT() {
@@ -50,13 +45,8 @@ public class LoginForm
     }
 
 
-    //NEVEIKIA
-    //NEVEIKIA
-    //NEVEIKIA
-    //NEVEIKIA
-    //NEVEIKIA
 
-    public void registerBT(ActionEvent actionEvent) throws IOException {
+    public void registerBT() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
         Parent parent = fxmlLoader.load();
 

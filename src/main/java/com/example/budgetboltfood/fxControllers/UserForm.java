@@ -70,23 +70,23 @@ public class UserForm implements Serializable {
     public void createUser()
     {
         User user = new User(emailField.getText(), pwField.getText(), nameField.getText(), phoneField.getText());
-        genericHibernate.createUser(user);
+        genericHibernate.create(user);
 
         if (clientRB.isSelected()) {
             Client client = new Client (emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), adressField.getText());
-            genericHibernate.createUser(user);
+            genericHibernate.create(client);
         }
         else if  (adminRB.isSelected()) {
             Admin admin = new Admin(emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), adminRB.isSelected());
-            genericHibernate.createUser(admin);
+            genericHibernate.create(admin);
         }
         else if  (restaurantRB.isSelected()) {
             Restaurant restaurant = new Restaurant(emailField.getText(), pwField.getText(), nameField.getText(), phoneField.getText(), adressField.getText(), cuisineTypeField.getValue(), restaurantStatus.getValue());
-            genericHibernate.createUser(restaurant);
+            genericHibernate.create(restaurant);
         }
         else if  (driverRB.isSelected()) {
             Driver driver = new Driver(emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), carTypeBox.getValue(), carPatesField.getText(), carMakeBox.getValue(), carColourBox.getValue());
-            genericHibernate.createUser(driver);
+            genericHibernate.create(driver);
         }
     }
 
@@ -178,6 +178,7 @@ public class UserForm implements Serializable {
         carMakeBox.getItems().setAll(VehicleModel.values());
         carColourBox.getItems().setAll(VehicleColor.values());
         cuisineTypeField.getItems().setAll(CuisineType.values());
+        restaurantStatus.getItems().setAll(RestaurantStatus.values());
     }
 
     public void cancel(ActionEvent event) {
