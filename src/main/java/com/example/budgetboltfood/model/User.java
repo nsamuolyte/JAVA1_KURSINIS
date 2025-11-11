@@ -1,14 +1,12 @@
 package com.example.budgetboltfood.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
@@ -17,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 
-public class User
+public class User implements Serializable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

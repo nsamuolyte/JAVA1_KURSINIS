@@ -30,6 +30,7 @@ public class LoginForm
     //NEVEIKIA
     //NEVEIKIA
     //NEVEIKIA
+    public void validateAndLoad() throws IOException {}
 
     public void loginBT() {
         try {
@@ -37,6 +38,7 @@ public class LoginForm
             User user = customHibernate.getUserByUsername(emailField.getText(), passwordField.getText());
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/main-form.fxml"));
             Parent parent = fxmlLoader.load();
+
             Scene scene = new Scene(parent);
             Stage stage = (Stage) passwordField.getScene().getWindow();
             stage.setTitle("Main Form");
@@ -60,6 +62,7 @@ public class LoginForm
 
         UserForm userForm = fxmlLoader.getController();
         userForm.setData(entityManagerFactory);
+
         Scene scene = new Scene(parent);
         Stage stage = (Stage) passwordField.getScene().getWindow();
         stage.setTitle("Hello!");

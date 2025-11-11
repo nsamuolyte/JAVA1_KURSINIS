@@ -50,19 +50,5 @@ public class CustomHibernate extends GenericHibernate{
         return orders;
     }
 
-    public List<Cuisine> getRestourantMenu(Restaurant restaurant) {
-        List<Cuisine> menu = new ArrayList<>();
-        try {
-            entityManager = entityManagerFactory.createEntityManager();
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Cuisine> query = cb.createQuery(Cuisine.class);
-            Root<Cuisine> root = query.from(Cuisine.class);
-
-            query.select(root).where(cb.equal(root.get("restaurantMenu"), restaurant));
-            Query q = entityManager.createQuery(query);
-            menu = q.getResultList();
-        } catch (Exception e){}
-        return menu;
-    }
 
 }

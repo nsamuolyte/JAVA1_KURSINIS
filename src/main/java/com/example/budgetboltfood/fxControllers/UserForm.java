@@ -70,23 +70,23 @@ public class UserForm implements Serializable {
     public void createUser()
     {
         User user = new User(emailField.getText(), pwField.getText(), nameField.getText(), phoneField.getText());
-        genericHibernate.create(user);
+        genericHibernate.createUser(user);
 
         if (clientRB.isSelected()) {
             Client client = new Client (emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), adressField.getText());
-            genericHibernate.create(user);
+            genericHibernate.createUser(user);
         }
         else if  (adminRB.isSelected()) {
             Admin admin = new Admin(emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), adminRB.isSelected());
-            genericHibernate.create(admin);
+            genericHibernate.createUser(admin);
         }
         else if  (restaurantRB.isSelected()) {
             Restaurant restaurant = new Restaurant(emailField.getText(), pwField.getText(), nameField.getText(), phoneField.getText(), adressField.getText(), cuisineTypeField.getValue(), restaurantStatus.getValue());
-            genericHibernate.create(restaurant);
+            genericHibernate.createUser(restaurant);
         }
         else if  (driverRB.isSelected()) {
             Driver driver = new Driver(emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), carTypeBox.getValue(), carPatesField.getText(), carMakeBox.getValue(), carColourBox.getValue());
-            genericHibernate.create(driver);
+            genericHibernate.createUser(driver);
         }
     }
 
@@ -182,4 +182,5 @@ public class UserForm implements Serializable {
 
     public void cancel(ActionEvent event) {
     }
+
 }
