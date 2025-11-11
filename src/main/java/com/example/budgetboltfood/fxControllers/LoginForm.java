@@ -29,25 +29,27 @@ public class LoginForm
     private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("login");
 
 
-    public void loginBT() throws IOException{
-            CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
-            User user = customHibernate.getUserByUsername(emailField.getText(), passwordField.getText());
-            if(user != null)
-            {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/main-form.fxml"));
-                Parent parent = fxmlLoader.load();
+    public void loginBT() throws IOException {
+        CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+        User user = customHibernate.getUserByUsername(emailField.getText(), passwordField.getText());
 
-                Scene scene = new Scene(parent);
-                Stage stage = (Stage) passwordField.getScene().getWindow();
-                stage.setTitle("Main Form");
-                stage.setScene(scene);
-                stage.show();
-            } else
-            {
-                FxUtils.generateAlert(Alert.AlertType.ERROR, "Error!", "Login error!", "Invalid username or password!");
-            }
+        if (user != null) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/main-form.fxml"));
+            Parent parent = fxmlLoader.load();
 
+            MainForm mainFormController = fxmlLoader.getController();
+            mainFormController.setData(entityManagerFactory, user); // <- svarbu
+
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) passwordField.getScene().getWindow();
+            stage.setTitle("Main Form");
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error!", "Login error!", "Invalid username or password!");
+        }
     }
+
 
 
     public void registerBT() throws IOException {

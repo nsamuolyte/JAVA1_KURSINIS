@@ -88,17 +88,26 @@ public class MainForm
     public void orderManagementTab(Event event){}
     public void menuManagementTab(Event event){}
 
-    public void signOut(ActionEvent event) throws IOException
-    {
+    @FXML
+    public void signOut(ActionEvent event) throws IOException {
+        // Uždaryti seną EntityManagerFactory, jei dar atidarytas
+        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
+            entityManagerFactory.close();
+        }
+
+        // Grįžti į login langą
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-form.fxml"));
         Parent root = fxmlLoader.load();
 
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        stage.setScene(new Scene(root));
         stage.setTitle("Login");
         stage.show();
+
+        System.out.println("Vartotojas atsijungė ir grįžo į login ekraną.");
     }
+
+
 
     public void initialize() {
         entityManagerFactory = Persistence.createEntityManagerFactory("login");
