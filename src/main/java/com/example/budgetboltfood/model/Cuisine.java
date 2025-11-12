@@ -20,10 +20,14 @@ public class Cuisine
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     protected int cuisineId;
+    @Enumerated(EnumType.STRING)
     protected CuisineType cuisineType;
     protected String description;
+    @Enumerated(EnumType.STRING)
     protected Ingriedients ingriedients;
+    @Enumerated(EnumType.STRING)
     protected Alergens alergens;
+    @Enumerated(EnumType.STRING)
     protected PortionSize portionSize;
 
     @ManyToMany (mappedBy = "menu", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

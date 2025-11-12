@@ -155,20 +155,18 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView layoutX="24.0" layoutY="25.0" prefHeight="432.0" prefWidth="200.0" />
-                        <ComboBox layoutX="250.0" layoutY="26.0" prefWidth="150.0" />
+                        <ListView fx:id="cuisineVidew" layoutX="24.0" layoutY="25.0" prefHeight="432.0" prefWidth="398.0" />
                         <Label layoutX="24.0" layoutY="6.0" text="My menu:" />
-                        <AnchorPane layoutX="250.0" layoutY="81.0" prefHeight="356.0" prefWidth="200.0">
+                        <AnchorPane layoutX="420.0" layoutY="39.0" prefHeight="405.0" prefWidth="200.0">
                            <children>
-                              <TextField layoutX="19.0" layoutY="27.0" prefHeight="26.0" prefWidth="167.0" />
-                              <Text layoutX="22.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Naujo patiekalo pavadinimas:" />
-                              <TableView layoutX="19.0" layoutY="57.0" prefHeight="263.0" prefWidth="167.0">
-                                 <columns>
-                                    <TableColumn prefWidth="124.49000549316406" text="Alergy" />
-                                    <TableColumn prefWidth="42.010009765625" text="Option" />
-                                 </columns>
-                              </TableView>
-                              <Button fx:id="saveCuisine" layoutX="77.0" layoutY="325.0" mnemonicParsing="false" onAction="#saveCuisineBT" text="SAVE" />
+                              <TextField fx:id="descriptionTexField" layoutX="18.0" layoutY="124.0" prefHeight="26.0" prefWidth="167.0" />
+                              <Text layoutX="22.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Naujo patiekalo pavadinimas:" />
+                              <Button layoutX="77.0" layoutY="325.0" mnemonicParsing="false" onAction="#saveCuisineBT" text="SAVE" />
+                              <ComboBox fx:id="ingrediantsBox" layoutX="26.0" layoutY="170.0" prefWidth="150.0" promptText="Ingrediants" />
+                              <ComboBox fx:id="alergensBox" layoutX="26.0" layoutY="208.0" prefWidth="150.0" promptText="Alergens" />
+                              <ComboBox fx:id="portionSizeBox" layoutX="26.0" layoutY="250.0" prefWidth="150.0" promptText="Portion size" />
+                              <ComboBox fx:id="cuisineTypeBox" layoutX="25.0" layoutY="59.0" prefWidth="150.0" promptText="Cuisine type" />
+                              <ComboBox fx:id="selectRest" layoutX="25.0" layoutY="14.0" prefWidth="150.0" promptText="Restaurant" />
                            </children>
                         </AnchorPane>
                      </children>

@@ -24,6 +24,25 @@ import java.util.List;
 public class MainForm
 {
     @FXML
+    public ListView<Cart> menu;
+    @FXML
+    public ComboBox<CuisineType> cuisineTypeBox;
+    @FXML
+    public TextField descriptionTexField;
+    @FXML
+    public ComboBox<Ingriedients> ingrediantsBox;
+    @FXML
+    public ComboBox<Alergens> alergensBox;
+    @FXML
+    public ComboBox<PortionSize> portionSizeBox;
+    @FXML
+    public ListView<Cuisine> cuisineVidew;
+    @FXML
+    public ComboBox<Restaurant> selectRest;
+    //public ListView<> alergenai;
+    //public Label kainaLbl;
+    //public Label kiekisLbl;
+    @FXML
     private AnchorPane userOrder;
     @FXML
     private ComboBox<String> atsiemimoBudas;
@@ -95,12 +114,12 @@ public class MainForm
     @FXML
     public void signOut(ActionEvent event) throws IOException
     {
-        // Uždaryti seną EntityManagerFactory, jei dar atidarytas
+        
         if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
             entityManagerFactory.close();
         }
 
-        // Grįžti į login langą
+        
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-form.fxml"));
         Parent root = fxmlLoader.load();
 
@@ -113,13 +132,37 @@ public class MainForm
     }
     public void atsijungtiBT(ActionEvent event) throws IOException { signOut(event); }
 
+
+
     public void initialize()
     {
+        cuisineTypeBox.setItems(FXCollections.observableArrayList(CuisineType.values()));
+        ingrediantsBox.setItems(FXCollections.observableArrayList(Ingriedients.values()));
+        alergensBox.setItems(FXCollections.observableArrayList(Alergens.values()));
+        portionSizeBox.setItems(FXCollections.observableArrayList(PortionSize.values()));
+
+        cuisineVidew.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Cuisine c, boolean empty) {
+                super.updateItem(c, empty);
+                if (empty || c == null) {
+                    setText(null);
+                } else {
+                    //String r = (c.getRestaurant() != null) ? c.getRestaurant().getName() : "—";
+                    setText("#" + c.getCuisineId() + " • " + c.getDescription()
+                            + " • " + c.getCuisineType()
+                            + " • " + c.getPortionSize()
+                            + " • " + c.getIngriedients()
+                            + " • " + c.getAlergens());
+                }
+            }
+        });
+
         atsiemimoBudas.getItems().addAll("Restorane", "Pristatymas");
         entityManagerFactory = Persistence.createEntityManagerFactory("login");
         loadAllData();
 
-        //patikra a kur gryba pjauam
+        
         EntityManager em = entityManagerFactory.createEntityManager();
         List<User> users = em.createQuery("from User", User.class).getResultList();
         System.out.println("Found users: " + users.size());
@@ -127,31 +170,42 @@ public class MainForm
 
         List<Driver> drivers = em.createQuery("FROM Driver", Driver.class).getResultList();
         orderDriver.getItems().setAll(drivers);
+
+        List<Restaurant> restaurants = em.createQuery("FROM Restaurant", Restaurant.class).getResultList();
+        selectRest.setItems(FXCollections.observableList(restaurants));
         em.close();
 
+        selectRest.valueProperty().addListener((obs, oldRest, newRest) -> {
+            if (loggedInUser instanceof Admin) {
+                refreshMenuList(newRest);
+            }
+        });
 
-        // --- ADMIN TABLE COLUMNS ---
+
+
+
+
         adminIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         adminNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         adminEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         adminPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         adminPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 
-        // --- CLIENT TABLE COLUMNS ---
+        
         clientIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         clientNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         clientEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         clientPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         clientPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 
-        // --- DRIVER TABLE COLUMNS ---
+     
         driverIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         driverNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         driverEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         driverPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         driverPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 
-        // --- RESTAURANT TABLE COLUMNS ---
+     
         restaurantIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         restaurantNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         restaurantEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -164,7 +218,8 @@ public class MainForm
         this.entityManagerFactory = entityManagerFactory;
         this.loggedInUser = user;
 
-        restrictAccessByRole(); // automatiškai pritaikys teises pagal tipą
+        restrictAccessByRole();
+        refreshMenuList();
     }
 
     private void loadAllData()
@@ -197,6 +252,9 @@ public class MainForm
             mainTabPane.getTabs().setAll(userManagement, orderManagement, menuManagement);
             userOrder.setVisible(false);
             userOrder.setManaged(false);
+
+            selectRest.setVisible(true);
+            selectRest.setManaged(true);
             return;
         }
         if (role.equals("Client"))
@@ -205,22 +263,123 @@ public class MainForm
             mainTabPane.getTabs().add(orderManagement);
             userOrder.setVisible(true);
             userOrder.setManaged(true);
+            selectRest.setVisible(false);
+            selectRest.setManaged(false);
             return;
         }
         if (role.equals("Driver"))
         {
             mainTabPane.getTabs().clear();
             mainTabPane.getTabs().add(orderManagement);
+            selectRest.setVisible(false);
+            selectRest.setManaged(false);
+            return;
         }
         if (role.equals("Restaurant"))
         {
             mainTabPane.getTabs().clear();
             mainTabPane.getTabs().add(orderManagement);
             mainTabPane.getTabs().add(menuManagement);
+            selectRest.setVisible(false);
+            selectRest.setManaged(false);
         }
     }
 
+
+    private void showAlert(Alert.AlertType type, String msg) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    @FXML
     public void saveCuisineBT(ActionEvent event) {
+        Restaurant restaurant = null;
+
+        if (loggedInUser instanceof Restaurant rest) {
+            restaurant = rest;
+        } else if (loggedInUser instanceof Admin) {
+            restaurant = selectRest.getValue();
+            if (restaurant == null) {
+                return;
+            }
+        } else {
+            return;
+        }
+
+        CuisineType ct = cuisineTypeBox.getValue();
+        Ingriedients ing = ingrediantsBox.getValue();
+        Alergens al = alergensBox.getValue();
+        PortionSize ps = portionSizeBox.getValue();
+        String name = descriptionTexField.getText();
+
+        if (name == null || name.isEmpty() || ct == null || ps == null) {
+            return;
+        }
+
+        Cuisine cuisine = new Cuisine();
+        cuisine.setCuisineType(ct);
+        cuisine.setDescription(name);
+        cuisine.setIngriedients(ing);
+        cuisine.setAlergens(al);
+        cuisine.setPortionSize(ps);
+
+        EntityManager em = null;
+        try {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+
+            Restaurant managedRest = em.find(Restaurant.class, restaurant.getId());
+            cuisine.setRestaurantManu(managedRest);
+
+            em.persist(cuisine);
+            em.getTransaction().commit();
+
+            clearCuisineForm();
+            refreshMenuList();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+
+    private void clearCuisineForm() {
+        cuisineTypeBox.getSelectionModel().clearSelection();
+        ingrediantsBox.getSelectionModel().clearSelection();
+        alergensBox.getSelectionModel().clearSelection();
+        portionSizeBox.getSelectionModel().clearSelection();
+        descriptionTexField.clear();
+    }
+
+    private void refreshMenuList(Restaurant restaurant) {
+        if (restaurant == null) {
+            cuisineVidew.getItems().clear();
+            return;
+        }
+
+        EntityManager em = entityManagerFactory.createEntityManager();
+        try {
+            List<Cuisine> items = em.createQuery(
+                            "SELECT c FROM Cuisine c WHERE c.restaurantManu.id = :rid ORDER BY c.cuisineId DESC",
+                            Cuisine.class)
+                    .setParameter("rid", restaurant.getId())
+                    .getResultList();
+            cuisineVidew.getItems().setAll(items);
+        } finally {
+            em.close();
+        }
+    }
+
+    private void refreshMenuList() {
+        if (loggedInUser instanceof Restaurant restaurant) {
+            refreshMenuList(restaurant);
+        } else {
+            cuisineVidew.getItems().clear();
+        }
     }
 
 

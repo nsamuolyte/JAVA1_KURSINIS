@@ -33,4 +33,9 @@ public class Restaurant extends User
         this.restaurantStatus = restaurantStatus;
         this.cuisineType = cuisineType;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
