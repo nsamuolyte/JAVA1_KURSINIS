@@ -52,17 +52,24 @@ public class LoginForm
 
 
 
-    public void registerBT() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
-        Parent parent = fxmlLoader.load();
+    public void registerBT() throws IOException
+    {
+        try {
+            // 👇 Įkeliam esamą registracijos FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
+            Parent root = fxmlLoader.load();
 
-        UserForm userForm = fxmlLoader.getController();
-        userForm.setData(entityManagerFactory);
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Register New User");
+            stage.setResizable(false);
+            stage.show();
 
-        Scene scene = new Scene(parent);
-        Stage stage = (Stage) passwordField.getScene().getWindow();
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Nepavyko atidaryti registracijos lango!");
+        }
     }
+
+
 }
