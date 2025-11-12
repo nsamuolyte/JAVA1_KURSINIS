@@ -46,4 +46,8 @@ public class Driver extends User
         this.vehicleColor = vehicleColor;
         this.VehiclesPlates = vehiclesPlates;
     }
+    @Override
+    public String toString() {
+        return name + " (" + email + ")";
+    }
 }

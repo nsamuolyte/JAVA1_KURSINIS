@@ -9,14 +9,17 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budgetboltfood.fxControllers.MainForm">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="558.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budgetboltfood.fxControllers.MainForm">
    <children>
-       <TabPane fx:id="mainTabPane" layoutY="30.0" prefHeight="514.0" prefWidth="679.0" tabClosingPolicy="UNAVAILABLE">
+      <Button fx:id="atsijungti" layoutX="614.0" layoutY="5.0" mnemonicParsing="false" onAction="#atsijungtiBT" text="SignOut" />
+       <TabPane fx:id="mainTabPane" layoutX="4.0" layoutY="36.0" prefHeight="514.0" prefWidth="679.0" tabClosingPolicy="UNAVAILABLE">
 
        <tabs>
           <Tab fx:id="userManagement" onSelectionChanged="#userManagementTab" text="Users Managment">
@@ -31,13 +34,13 @@
                                   <content>
                                       <TableView fx:id="restaurantTableView" prefHeight="200.0" prefWidth="200.0">
                                           <columns>
-                                              <TableColumn fx:id="restaurantIdColumn" prefWidth="63.0" text="ID"/>
-                                              <TableColumn fx:id="restaurantNameColumn" prefWidth="105.0" text="NAME"/>
-                                              <TableColumn fx:id="restaurantEmailColumn" prefWidth="101.0" text="EMAIL"/>
-                                              <TableColumn fx:id="restaurantPasswordColumn" prefWidth="94.0" text="PASSWORD"/>
-                                              <TableColumn fx:id="restaurantPhoneColumn" prefWidth="95.0" text="PHONE"/>
-                                              <TableColumn fx:id="restaurantOrdersColumn" prefWidth="96.0" text="PAST ORDERS"/>
-                                              <TableColumn fx:id="restaurantDeleteColumn" prefWidth="73.0" text="DELETE"/>
+                                              <TableColumn fx:id="restaurantIdColumn" prefWidth="63.0" text="ID" />
+                                              <TableColumn fx:id="restaurantNameColumn" prefWidth="105.0" text="NAME" />
+                                              <TableColumn fx:id="restaurantEmailColumn" prefWidth="101.0" text="EMAIL" />
+                                              <TableColumn fx:id="restaurantPasswordColumn" prefWidth="94.0" text="PASSWORD" />
+                                              <TableColumn fx:id="restaurantPhoneColumn" prefWidth="95.0" text="PHONE" />
+                                              <TableColumn fx:id="restaurantOrdersColumn" prefWidth="96.0" text="PAST ORDERS" />
+                                              <TableColumn fx:id="restaurantDeleteColumn" prefWidth="73.0" text="DELETE" />
                                           </columns>
                                       </TableView>
                                   </content>
@@ -50,13 +53,13 @@
                                   <content>
                                       <TableView fx:id="adminTableView" prefHeight="200.0" prefWidth="200.0">
                                           <columns>
-                                              <TableColumn fx:id="adminIdColumn" prefWidth="63.0" text="ID"/>
-                                              <TableColumn fx:id="adminNameColumn" prefWidth="105.0" text="NAME"/>
-                                              <TableColumn fx:id="adminEmailColumn" prefWidth="101.0" text="EMAIL"/>
-                                              <TableColumn fx:id="adminPasswordColumn" prefWidth="94.0" text="PASSWORD"/>
-                                              <TableColumn fx:id="adminPhoneColumn" prefWidth="95.0" text="PHONE"/>
-                                              <TableColumn fx:id="adminOrdersColumn" prefWidth="96.0" text="PAST ORDERS"/>
-                                              <TableColumn fx:id="adminDeleteColumn" prefWidth="73.0" text="DELETE"/>
+                                              <TableColumn fx:id="adminIdColumn" prefWidth="63.0" text="ID" />
+                                              <TableColumn fx:id="adminNameColumn" prefWidth="105.0" text="NAME" />
+                                              <TableColumn fx:id="adminEmailColumn" prefWidth="101.0" text="EMAIL" />
+                                              <TableColumn fx:id="adminPasswordColumn" prefWidth="94.0" text="PASSWORD" />
+                                              <TableColumn fx:id="adminPhoneColumn" prefWidth="95.0" text="PHONE" />
+                                              <TableColumn fx:id="adminOrdersColumn" prefWidth="96.0" text="PAST ORDERS" />
+                                              <TableColumn fx:id="adminDeleteColumn" prefWidth="73.0" text="DELETE" />
                                           </columns>
                                       </TableView>
                                   </content>
@@ -68,13 +71,13 @@
                                   <content>
                                       <TableView fx:id="clientTableView" prefHeight="200.0" prefWidth="200.0">
                                           <columns>
-                                              <TableColumn fx:id="clientIdColumn" prefWidth="63.0" text="ID"/>
-                                              <TableColumn fx:id="clientNameColumn" prefWidth="105.0" text="NAME"/>
-                                              <TableColumn fx:id="clientEmailColumn" prefWidth="101.0" text="EMAIL"/>
-                                              <TableColumn fx:id="clientPasswordColumn" prefWidth="94.0" text="PASSWORD"/>
-                                              <TableColumn fx:id="clientPhoneColumn" prefWidth="95.0" text="PHONE"/>
-                                              <TableColumn fx:id="clientOrdersColumn" prefWidth="96.0" text="PAST ORDERS"/>
-                                              <TableColumn fx:id="clientDeleteColumn" prefWidth="73.0" text="DELETE"/>
+                                              <TableColumn fx:id="clientIdColumn" prefWidth="63.0" text="ID" />
+                                              <TableColumn fx:id="clientNameColumn" prefWidth="105.0" text="NAME" />
+                                              <TableColumn fx:id="clientEmailColumn" prefWidth="101.0" text="EMAIL" />
+                                              <TableColumn fx:id="clientPasswordColumn" prefWidth="94.0" text="PASSWORD" />
+                                              <TableColumn fx:id="clientPhoneColumn" prefWidth="95.0" text="PHONE" />
+                                              <TableColumn fx:id="clientOrdersColumn" prefWidth="96.0" text="PAST ORDERS" />
+                                              <TableColumn fx:id="clientDeleteColumn" prefWidth="73.0" text="DELETE" />
                                           </columns>
                                       </TableView>
                                   </content>
@@ -88,13 +91,13 @@
                                   <content>
                                       <TableView fx:id="driverTableView" prefHeight="200.0" prefWidth="200.0">
                                           <columns>
-                                              <TableColumn fx:id="driverIdColumn" prefWidth="63.0" text="ID"/>
-                                              <TableColumn fx:id="driverNameColumn" prefWidth="105.0" text="NAME"/>
-                                              <TableColumn fx:id="driverEmailColumn" prefWidth="101.0" text="EMAIL"/>
-                                              <TableColumn fx:id="driverPasswordColumn" prefWidth="94.0" text="PASSWORD"/>
-                                              <TableColumn fx:id="driverPhoneColumn" prefWidth="95.0" text="PHONE"/>
-                                              <TableColumn fx:id="driverOrdersColumn" prefWidth="96.0" text="PAST ORDERS"/>
-                                              <TableColumn fx:id="driverDeleteColumn" prefWidth="73.0" text="DELETE"/>
+                                              <TableColumn fx:id="driverIdColumn" prefWidth="63.0" text="ID" />
+                                              <TableColumn fx:id="driverNameColumn" prefWidth="105.0" text="NAME" />
+                                              <TableColumn fx:id="driverEmailColumn" prefWidth="101.0" text="EMAIL" />
+                                              <TableColumn fx:id="driverPasswordColumn" prefWidth="94.0" text="PASSWORD" />
+                                              <TableColumn fx:id="driverPhoneColumn" prefWidth="95.0" text="PHONE" />
+                                              <TableColumn fx:id="driverOrdersColumn" prefWidth="96.0" text="PAST ORDERS" />
+                                              <TableColumn fx:id="driverDeleteColumn" prefWidth="73.0" text="DELETE" />
                                           </columns>
                                       </TableView>
                                   </content>
@@ -119,11 +122,6 @@
                               <Font size="11.0" />
                            </font>
                         </Button>
-                        <Button fx:id="signOutBT" layoutX="318.0" layoutY="428.0" mnemonicParsing="false" onAction="#signOut" prefHeight="31.0" prefWidth="95.0" text="Sign out">
-                           <font>
-                              <Font size="11.0" />
-                           </font>
-                        </Button>
                      </children>
                   </AnchorPane>
             </content>
@@ -132,9 +130,23 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView layoutX="9.0" layoutY="15.0" prefHeight="440.0" prefWidth="200.0" />
-                        <ComboBox layoutX="230.0" layoutY="16.0" prefWidth="150.0" promptText="STATUS" />
-                        <ComboBox layoutX="232.0" layoutY="58.0" prefWidth="150.0" promptText="DRIVER" />
+                        <AnchorPane layoutX="9.0" layoutY="14.0" prefHeight="440.0" prefWidth="413.0">
+                           <children>
+                              <ListView fx:id="menu" layoutY="83.0" prefHeight="357.0" prefWidth="200.0" />
+                              <ComboBox fx:id="orderDriver" prefWidth="150.0" promptText="DRIVER" />
+                              <ComboBox layoutY="40.0" prefWidth="150.0" promptText="STATUS" />
+                              <ComboBox layoutX="156.0" layoutY="-1.0" prefHeight="68.0" prefWidth="249.0" promptText="RESTAURANT" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="userOrder" layoutX="465.0" layoutY="21.0" prefHeight="440.0" prefWidth="200.0">
+                           <children>
+                              <ComboBox fx:id="atsiemimoBudas" layoutX="37.0" layoutY="112.0" prefWidth="150.0" promptText="Pick-up method" />
+                              <ListView fx:id="alergenai" layoutX="15.0" layoutY="226.0" prefHeight="200.0" prefWidth="170.0" />
+                              <Label fx:id="kainaLbl" layoutX="13.0" layoutY="189.0" text="Price:" />
+                              <Label fx:id="kiekisLbl" layoutX="13.0" layoutY="206.0" text="Quantity:" />
+                              <Button layoutX="37.0" layoutY="80.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="152.0" text="SEND ORDER" />
+                           </children>
+                        </AnchorPane>
                      </children>
                   </AnchorPane>
             </content>
@@ -146,6 +158,19 @@
                         <ListView layoutX="24.0" layoutY="25.0" prefHeight="432.0" prefWidth="200.0" />
                         <ComboBox layoutX="250.0" layoutY="26.0" prefWidth="150.0" />
                         <Label layoutX="24.0" layoutY="6.0" text="My menu:" />
+                        <AnchorPane layoutX="250.0" layoutY="81.0" prefHeight="356.0" prefWidth="200.0">
+                           <children>
+                              <TextField layoutX="19.0" layoutY="27.0" prefHeight="26.0" prefWidth="167.0" />
+                              <Text layoutX="22.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Naujo patiekalo pavadinimas:" />
+                              <TableView layoutX="19.0" layoutY="57.0" prefHeight="263.0" prefWidth="167.0">
+                                 <columns>
+                                    <TableColumn prefWidth="124.49000549316406" text="Alergy" />
+                                    <TableColumn prefWidth="42.010009765625" text="Option" />
+                                 </columns>
+                              </TableView>
+                              <Button fx:id="saveCuisine" layoutX="77.0" layoutY="325.0" mnemonicParsing="false" onAction="#saveCuisineBT" text="SAVE" />
+                           </children>
+                        </AnchorPane>
                      </children>
                   </AnchorPane>
                </content>

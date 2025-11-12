@@ -13,11 +13,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,10 +24,17 @@ import java.util.List;
 public class MainForm
 {
     @FXML
+    private AnchorPane userOrder;
+    @FXML
+    private ComboBox<String> atsiemimoBudas;
+    public ComboBox <Driver> orderDriver;
+    @FXML
     private TabPane mainTabPane;
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
     private User loggedInUser;
+    @FXML
+    private javafx.scene.control.Button atsijungtiBT;
 
 
     @FXML private TableColumn<Admin, Integer> adminIdColumn;
@@ -83,13 +88,13 @@ public class MainForm
 
     public void newUserAddBT(ActionEvent event) {}
     public void DeleteBT(ActionEvent event){}
-
     public void userManagementTab(Event event){}
     public void orderManagementTab(Event event){}
     public void menuManagementTab(Event event){}
 
     @FXML
-    public void signOut(ActionEvent event) throws IOException {
+    public void signOut(ActionEvent event) throws IOException
+    {
         // Uždaryti seną EntityManagerFactory, jei dar atidarytas
         if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
             entityManagerFactory.close();
@@ -106,10 +111,11 @@ public class MainForm
 
         System.out.println("Vartotojas atsijungė ir grįžo į login ekraną.");
     }
+    public void atsijungtiBT(ActionEvent event) throws IOException { signOut(event); }
 
-
-
-    public void initialize() {
+    public void initialize()
+    {
+        atsiemimoBudas.getItems().addAll("Restorane", "Pristatymas");
         entityManagerFactory = Persistence.createEntityManagerFactory("login");
         loadAllData();
 
@@ -117,9 +123,12 @@ public class MainForm
         EntityManager em = entityManagerFactory.createEntityManager();
         List<User> users = em.createQuery("from User", User.class).getResultList();
         System.out.println("Found users: " + users.size());
-        for (User u : users) {
-            System.out.println(u.getClass().getSimpleName() + " -> " + u.getEmail());
-        }
+        for (User u : users) { System.out.println(u.getClass().getSimpleName() + " -> " + u.getEmail()); }
+
+        List<Driver> drivers = em.createQuery("FROM Driver", Driver.class).getResultList();
+        orderDriver.getItems().setAll(drivers);
+        em.close();
+
 
         // --- ADMIN TABLE COLUMNS ---
         adminIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -150,7 +159,16 @@ public class MainForm
         restaurantPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
     }
 
-    private void loadAllData() {
+    public void setData(EntityManagerFactory entityManagerFactory, User user)
+    {
+        this.entityManagerFactory = entityManagerFactory;
+        this.loggedInUser = user;
+
+        restrictAccessByRole(); // automatiškai pritaikys teises pagal tipą
+    }
+
+    private void loadAllData()
+    {
         EntityManager em = entityManagerFactory.createEntityManager();
 
         List<Admin> admins = em.createQuery("from Admin", Admin.class).getResultList();
@@ -169,23 +187,41 @@ public class MainForm
 
     }
 
-    public void setData(EntityManagerFactory entityManagerFactory, User user) {
-        this.entityManagerFactory = entityManagerFactory;
-        this.loggedInUser = user;
-
-        restrictAccessByRole(); // automatiškai pritaikys teises pagal tipą
-    }
-    private void restrictAccessByRole() {
+   private void restrictAccessByRole() {
         if (loggedInUser == null) return;
 
-        // Jei vartotojas nėra adminas — paslepiam tabus
-        if (!(loggedInUser.getClass().getSimpleName().equals("Admin")))
+        String role = loggedInUser.getClass().getSimpleName();
+
+        if (role.equals("Admin"))
         {
-            mainTabPane.getTabs().removeAll(userManagement, orderManagement, menuManagement);
+            mainTabPane.getTabs().setAll(userManagement, orderManagement, menuManagement);
+            userOrder.setVisible(false);
+            userOrder.setManaged(false);
+            return;
+        }
+        if (role.equals("Client"))
+        {
+            mainTabPane.getTabs().clear();
+            mainTabPane.getTabs().add(orderManagement);
+            userOrder.setVisible(true);
+            userOrder.setManaged(true);
+            return;
+        }
+        if (role.equals("Driver"))
+        {
+            mainTabPane.getTabs().clear();
+            mainTabPane.getTabs().add(orderManagement);
+        }
+        if (role.equals("Restaurant"))
+        {
+            mainTabPane.getTabs().clear();
+            mainTabPane.getTabs().add(orderManagement);
+            mainTabPane.getTabs().add(menuManagement);
         }
     }
 
-
+    public void saveCuisineBT(ActionEvent event) {
+    }
 
 
     //CRAZZY???
