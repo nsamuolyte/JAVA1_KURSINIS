@@ -36,11 +36,10 @@
                                           <columns>
                                               <TableColumn fx:id="restaurantIdColumn" prefWidth="63.0" text="ID" />
                                               <TableColumn fx:id="restaurantNameColumn" prefWidth="105.0" text="NAME" />
-                                              <TableColumn fx:id="restaurantEmailColumn" prefWidth="101.0" text="EMAIL" />
-                                              <TableColumn fx:id="restaurantPasswordColumn" prefWidth="94.0" text="PASSWORD" />
-                                              <TableColumn fx:id="restaurantPhoneColumn" prefWidth="95.0" text="PHONE" />
-                                              <TableColumn fx:id="restaurantOrdersColumn" prefWidth="96.0" text="PAST ORDERS" />
-                                              <TableColumn fx:id="restaurantDeleteColumn" prefWidth="73.0" text="DELETE" />
+                                              <TableColumn fx:id="restaurantPhoneColumn" prefWidth="112.0" text="PHONE" />
+                                              <TableColumn fx:id="restaurantEmailColumn" prefWidth="164.0" text="EMAIL" />
+                                              <TableColumn fx:id="restaurantPasswordColumn" prefWidth="107.0" text="PASSWORD" />
+                                              <TableColumn fx:id="restaurantDeleteColumn" prefWidth="64.0" text="DELETE" />
                                           </columns>
                                       </TableView>
                                   </content>
@@ -117,7 +116,7 @@
                               <Font size="11.0" />
                            </font>
                         </Button>
-                        <Button fx:id="Delete" layoutX="220.0" layoutY="428.0" mnemonicParsing="false" onAction="#DeleteBT" prefHeight="31.0" prefWidth="95.0" text="Delete">
+                        <Button fx:id="Save" layoutX="220.0" layoutY="428.0" mnemonicParsing="false" onAction="#saveBT" prefHeight="31.0" prefWidth="95.0" text="Save">
                            <font>
                               <Font size="11.0" />
                            </font>
@@ -134,7 +133,7 @@
                            <children>
                               <ListView fx:id="menu" layoutY="83.0" prefHeight="357.0" prefWidth="200.0" />
                               <ComboBox fx:id="orderDriver" prefWidth="150.0" promptText="DRIVER" />
-                              <ComboBox layoutY="40.0" prefWidth="150.0" promptText="STATUS" />
+                              <ComboBox fx:id="status" layoutY="40.0" prefWidth="150.0" promptText="STATUS" />
                               <ComboBox layoutX="156.0" layoutY="-1.0" prefHeight="68.0" prefWidth="249.0" promptText="RESTAURANT" />
                            </children>
                         </AnchorPane>

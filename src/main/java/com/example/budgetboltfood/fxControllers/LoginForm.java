@@ -1,13 +1,12 @@
 package com.example.budgetboltfood.fxControllers;
 
-
 import com.example.budgetboltfood.HelloApplication;
 import com.example.budgetboltfood.hibernateControl.CustomHibernate;
 import com.example.budgetboltfood.model.User;
 import com.example.budgetboltfood.utils.FxUtils;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -50,15 +49,13 @@ public class LoginForm
         }
     }
 
-
-
     public void registerBT() throws IOException
     {
         try {
-            // 👇 Įkeliam esamą registracijos FXML
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
             Parent root = fxmlLoader.load();
-
+            UserForm userForm = fxmlLoader.getController();
+            userForm.setData(entityManagerFactory);
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Register New User");

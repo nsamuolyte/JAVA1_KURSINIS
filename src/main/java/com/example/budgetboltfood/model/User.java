@@ -16,8 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "User")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // viskas bus 1 lentelėje
-@DiscriminatorColumn(name = "DTYPE") // Hibernate saugo tipo pavadinimą šiame stulpelyje
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "DTYPE")
 
 public class User implements Serializable
 {

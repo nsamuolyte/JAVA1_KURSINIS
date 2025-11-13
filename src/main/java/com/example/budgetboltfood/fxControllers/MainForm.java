@@ -39,9 +39,9 @@ public class MainForm
     public ListView<Cuisine> cuisineVidew;
     @FXML
     public ComboBox<Restaurant> selectRest;
-    //public ListView<> alergenai;
-    //public Label kainaLbl;
-    //public Label kiekisLbl;
+    @FXML
+    public ComboBox<RestaurantStatus> status;
+
     @FXML
     private AnchorPane userOrder;
     @FXML
@@ -86,7 +86,7 @@ public class MainForm
     @FXML private TableColumn<Restaurant, String> restaurantPasswordColumn;
     @FXML private TableColumn<Restaurant, String> restaurantPhoneColumn;
     @FXML private TableColumn<Restaurant, String> restaurantOrdersColumn;
-    @FXML private TableColumn<Restaurant, String> restaurantDeleteColumn;
+    @FXML private TableColumn<Restaurant, Void> restaurantDeleteColumn;
 
 
 
@@ -174,15 +174,12 @@ public class MainForm
         selectRest.setItems(FXCollections.observableList(restaurants));
         em.close();
 
+
         selectRest.valueProperty().addListener((obs, oldRest, newRest) -> {
             if (loggedInUser instanceof Admin) {
                 refreshMenuList(newRest);
             }
         });
-
-
-
-
 
         adminIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         adminNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -210,6 +207,8 @@ public class MainForm
         restaurantEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         restaurantPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         restaurantPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+
+        setupDeleteColumn();
     }
 
     public void setData(EntityManagerFactory entityManagerFactory, User user)
@@ -384,7 +383,6 @@ public class MainForm
     @FXML
     public void newUserAddBT(ActionEvent event) {
         try {
-            // 👇 Įkeliam esamą registracijos FXML
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
             Parent root = fxmlLoader.load();
 
@@ -396,7 +394,139 @@ public class MainForm
 
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("❌ Nepavyko atidaryti registracijos lango!");
+            System.out.println("Nepavyko atidaryti registracijos lango!");
+        }
+    }
+
+ // new
+    private void setupDeleteColumn() {
+        restaurantDeleteColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button deleteButton = new Button();
+
+            {
+                // 🔸 Uždedam ikoną (emoji arba FontAwesome jei nori)
+                deleteButton.setText("🗑");
+                deleteButton.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;");
+
+                deleteButton.setOnAction(event -> {
+                    Restaurant selected = getTableView().getItems().get(getIndex());
+                    showDeleteConfirmation(selected);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                }
+            }
+        });
+    }
+    private void showDeleteConfirmation(Restaurant restaurant) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Ar tikrai norite ištrinti " + restaurant.getName() + "?");
+
+        ButtonType yesButton = new ButtonType("Taip", ButtonBar.ButtonData.YES);
+        ButtonType noButton = new ButtonType("Ne", ButtonBar.ButtonData.NO);
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == yesButton) {
+                deleteRestaurant(restaurant);
+            }
+        });
+    }
+    private void deleteRestaurant(Restaurant restaurant) {
+        EntityManager em = null;
+        try {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+
+            // Pirmiausia atnaujinam reference (jei reikia)
+            Restaurant managed = em.find(Restaurant.class, restaurant.getId());
+            if (managed != null) {
+                em.createQuery("DELETE FROM Cuisine c WHERE c.restaurantManu.id = :rid")
+                        .setParameter("rid", restaurant.getId())
+                        .executeUpdate();
+                em.remove(managed);
+            }
+
+            em.getTransaction().commit();
+
+            restaurantTableView.getItems().remove(restaurant);
+
+            showAlert(Alert.AlertType.INFORMATION, "Restoranas \"" + restaurant.getName() + "\" sėkmingai ištrintas!");
+        } catch (Exception e) {
+            if (em != null && em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Nepavyko ištrinti restorano: " + e.getMessage());
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+
+    @FXML
+    public void saveBT(ActionEvent event) {
+        EntityManager em = null;
+        try {
+            em = entityManagerFactory.createEntityManager();
+            em.getTransaction().begin();
+
+            // --- RESTAURANTS ---
+            for (Restaurant r : restaurantTableView.getItems()) {
+                if (r.getId() == 0) { // naujas
+                    em.persist(r);
+                } else {
+                    em.merge(r); // atnaujintas
+                }
+            }
+
+            // --- ADMINS ---
+            for (Admin a : adminTableView.getItems()) {
+                if (a.getId() == 0) {
+                    em.persist(a);
+                } else {
+                    em.merge(a);
+                }
+            }
+
+            // --- CLIENTS ---
+            for (Client c : clientTableView.getItems()) {
+                if (c.getId() == 0) {
+                    em.persist(c);
+                } else {
+                    em.merge(c);
+                }
+            }
+
+            // --- DRIVERS ---
+            for (Driver d : driverTableView.getItems()) {
+                if (d.getId() == 0) {
+                    em.persist(d);
+                } else {
+                    em.merge(d);
+                }
+            }
+
+            em.getTransaction().commit();
+            showAlert(Alert.AlertType.INFORMATION, "Visi pakeitimai sėkmingai išsaugoti!");
+
+        } catch (Exception e) {
+            if (em != null && em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Nepavyko išsaugoti pakeitimų: " + e.getMessage());
+        } finally {
+            if (em != null) em.close();
         }
     }
 

@@ -64,7 +64,7 @@ public class UserForm implements Serializable {
 
     public void setData (EntityManagerFactory entityManagerFactory){
         this.entityManagerFactory = entityManagerFactory;
-        this.genericHibernate = new GenericHibernate(entityManagerFactory);
+        this.genericHibernate = new GenericHibernate(this.entityManagerFactory);
     }
 
     @FXML
@@ -90,7 +90,6 @@ public class UserForm implements Serializable {
 
 
     public void disableFields() {
-        // Simple useris
         if (clientRB.isSelected()) {
             // enable
             nameField.setVisible(true);
@@ -181,15 +180,9 @@ public class UserForm implements Serializable {
 
     public void cancel(ActionEvent event) throws IOException
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-form.fxml"));
-        Parent root = fxmlLoader.load();
-
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Login");
-        stage.show();
-
+        stage.close();
     }
+
 
 }
