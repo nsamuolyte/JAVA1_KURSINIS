@@ -22,4 +22,6 @@ module com.example.budgetboltfood {
         exports com.example.budgetboltfood.fxControllers;
         opens com.example.budgetboltfood.model to org.hibernate.orm.core;
         exports com.example.budgetboltfood.model;
-        }
+    exports com.example.budgetboltfood.fxControllers.MainForm;
+    opens com.example.budgetboltfood.fxControllers.MainForm to javafx.fxml, org.hibernate.orm.core;
+}

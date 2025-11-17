@@ -1,6 +1,7 @@
 package com.example.budgetboltfood.fxControllers;
 
 import com.example.budgetboltfood.HelloApplication;
+import com.example.budgetboltfood.fxControllers.MainForm.MainForm;
 import com.example.budgetboltfood.hibernateControl.CustomHibernate;
 import com.example.budgetboltfood.model.User;
 import com.example.budgetboltfood.utils.FxUtils;
