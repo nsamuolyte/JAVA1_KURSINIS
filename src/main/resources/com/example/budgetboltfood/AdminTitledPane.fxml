@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.budgetboltfood.fxControllers.MainForm.AdminTable"
+            prefHeight="400" prefWidth="600">
+
+    <TableView fx:id="adminTableView" layoutX="0" layoutY="0" prefHeight="400" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="adminIdColumn" text="ID" prefWidth="60"/>
+            <TableColumn fx:id="adminNameColumn" text="NAME" prefWidth="120"/>
+            <TableColumn fx:id="adminEmailColumn" text="EMAIL" prefWidth="150"/>
+            <TableColumn fx:id="adminPasswordColumn" text="PASSWORD" prefWidth="120"/>
+            <TableColumn fx:id="adminDeleteColumn" prefWidth="73.0" text="DELETE" />
+        </columns>
+    </TableView>
+
+</AnchorPane>

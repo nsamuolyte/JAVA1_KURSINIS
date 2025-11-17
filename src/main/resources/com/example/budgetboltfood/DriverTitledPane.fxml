@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.budgetboltfood.fxControllers.MainForm.DriverTable"
+            prefHeight="400.0" prefWidth="600.0">
+        <TableView fx:id="driverTableView" prefHeight="400" prefWidth="600">
+            <columns>
+                <TableColumn fx:id="driverIdColumn" prefWidth="63.0" text="ID" />
+                <TableColumn fx:id="driverNameColumn" prefWidth="105.0" text="NAME" />
+                <TableColumn fx:id="driverEmailColumn" prefWidth="101.0" text="EMAIL" />
+                <TableColumn fx:id="driverPasswordColumn" prefWidth="94.0" text="PASSWORD" />
+                <TableColumn fx:id="driverPhoneColumn" prefWidth="95.0" text="PHONE" />
+                <TableColumn fx:id="driverOrdersColumn" prefWidth="96.0" text="PAST ORDERS" />
+                <TableColumn fx:id="driverDeleteColumn" prefWidth="73.0" text="DELETE" />
+            </columns>
+        </TableView>
+</AnchorPane>
