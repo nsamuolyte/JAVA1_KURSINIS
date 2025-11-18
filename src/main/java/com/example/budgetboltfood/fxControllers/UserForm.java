@@ -68,7 +68,7 @@ public class UserForm implements Serializable {
     }
 
     @FXML
-    public void createUser()
+    public void createUser(ActionEvent event)
     {
         if (clientRB.isSelected()) {
             Client client = new Client (emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), adressField.getText());
@@ -86,6 +86,9 @@ public class UserForm implements Serializable {
             Driver driver = new Driver(emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), carTypeBox.getValue(), carPatesField.getText(), carMakeBox.getValue(), carColourBox.getValue());
             genericHibernate.create(driver);
         }
+        // ---------- UŽDAROME REGISTRACIJOS LANGĄ ----------
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
 
