@@ -4,6 +4,7 @@ import com.example.budgetboltfood.model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -19,12 +20,18 @@ public class OrderTab {
     @FXML private ComboBox<PickUpMethod> atsiemimoBudas;
 
     @FXML private ListView<Cuisine> menu;
+    @FXML private ListView<Cuisine> order;  // krepšelis
     @FXML private ListView<Alergens> alergenai;
 
     @FXML private Label kainaLbl;
     @FXML private Label kiekisLbl;
+    @FXML private Label priceValueLbl;
+    @FXML private Label quantityValueLbl;
 
     @FXML private Button sendOrderBtn;
+
+    // === UI krepšelis (tik ekrane, ne DB) ===
+    private final ObservableList<Cuisine> cartItems = FXCollections.observableArrayList();
 
     // === INTERNAL ===
     private EntityManagerFactory emf;
@@ -32,7 +39,7 @@ public class OrderTab {
 
 
     // =====================================================================
-    // INIT CALLED FROM MainForm
+    // INIT
     // =====================================================================
     public void init(EntityManagerFactory emf, User user) {
         this.emf = emf;
@@ -41,13 +48,36 @@ public class OrderTab {
         loadRestaurants();
         loadDrivers();
 
-        //cuisineTypeBox.setItems(FXCollections.observableArrayList(CuisineType.values()));
-
         status.setItems(FXCollections.observableArrayList(OrderStatus.values()));
         atsiemimoBudas.setItems(FXCollections.observableArrayList(PickUpMethod.values()));
 
         // kai pasirenkamas restoranas – užkrauti meniu
         restaurantPicker.valueProperty().addListener((obs, old, val) -> reloadMenu());
+
+        hideControlsByRole();
+
+        // meniui leisti multi select
+        menu.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        menu.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Cuisine c, boolean empty) {
+                super.updateItem(c, empty);
+                if (empty || c == null) setText(null);
+                else setText(c.getDescription() + " — " + c.getPortionSize().getPrice() + " €");
+            }
+        });
+
+        // ORDER LIST VIEW = CART UI
+        order.setItems(cartItems);
+        order.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Cuisine c, boolean empty) {
+                super.updateItem(c, empty);
+                if (empty || c == null) setText(null);
+                else setText(c.getDescription() + " — " + c.getPortionSize().getPrice() + " €");
+            }
+        });
+        updateCartSummary();
     }
 
 
@@ -56,7 +86,8 @@ public class OrderTab {
     // =====================================================================
     private void loadRestaurants() {
         EntityManager em = emf.createEntityManager();
-        List<Restaurant> restaurants = em.createQuery("FROM Restaurant", Restaurant.class).getResultList();
+        List<Restaurant> restaurants =
+                em.createQuery("FROM Restaurant", Restaurant.class).getResultList();
         restaurantPicker.setItems(FXCollections.observableArrayList(restaurants));
         em.close();
     }
@@ -66,47 +97,76 @@ public class OrderTab {
     // =====================================================================
     private void loadDrivers() {
         EntityManager em = emf.createEntityManager();
-        List<Driver> drivers = em.createQuery("FROM Driver", Driver.class).getResultList();
+        List<Driver> drivers =
+                em.createQuery("FROM Driver", Driver.class).getResultList();
         orderDriver.setItems(FXCollections.observableArrayList(drivers));
         em.close();
     }
 
 
     // =====================================================================
-    // LOAD MENU BASED ON RESTAURANT
+    // LOAD MENU FOR SELECTED RESTAURANT
     // =====================================================================
     private void reloadMenu() {
+        Restaurant rest = restaurantPicker.getValue();
 
-        if (restaurantPicker.getValue() == null) {
+        if (rest == null) {
             menu.getItems().clear();
             return;
         }
 
         EntityManager em = emf.createEntityManager();
-
         List<Cuisine> cuisines = em.createQuery(
-                        "SELECT c FROM Cuisine c WHERE c.restaurant Manu.id = :id", Cuisine.class)
-                .setParameter("id", restaurantPicker.getValue().getId())
+                        "SELECT c FROM Cuisine c WHERE c.restaurantManu.id = :restId",
+                        Cuisine.class)
+                .setParameter("restId", rest.getId())
                 .getResultList();
 
         menu.setItems(FXCollections.observableArrayList(cuisines));
 
         em.close();
+
+        // keičiant restoraną – išvalyti krepšelį
+        cartItems.clear();
     }
 
 
     // =====================================================================
-    // SEND ORDER
+    // ADD TO CART (UI ONLY, no DB)
+    // =====================================================================
+    @FXML
+    private void addToCart() {
+
+        List<Cuisine> selected = menu.getSelectionModel().getSelectedItems();
+
+        if (selected == null || selected.isEmpty()) {
+            showAlert("Please select at least one dish.");
+            return;
+        }
+
+        cartItems.addAll(selected);
+        updateCartSummary();
+
+        showAlert("Added to cart!");
+    }
+
+
+    // =====================================================================
+    // SEND ORDER (SAVE CART WITH MULTI ITEMS)
     // =====================================================================
     @FXML
     private void sendOrder() {
 
-        Cuisine dish = menu.getSelectionModel().getSelectedItem();
+        if (cartItems.isEmpty()) {
+            showAlert("Cart is empty.");
+            return;
+        }
+
         Restaurant rest = restaurantPicker.getValue();
         PickUpMethod pm = atsiemimoBudas.getValue();
 
-        if (dish == null || rest == null || pm == null) {
-            showAlert("Please select dish, restaurant and pick-up method.");
+        if (rest == null || pm == null) {
+            showAlert("Restaurant and pick-up method must be selected.");
             return;
         }
 
@@ -116,36 +176,87 @@ public class OrderTab {
             em.getTransaction().begin();
 
             Cart cart = new Cart();
+
             cart.setDateCreated(LocalDate.now());
             cart.setOrderStatus(OrderStatus.PENDING);
-            cart.setQuantity(1);
-            cart.setTotalPrice(dish.getPortionSize().getPrice());
+            cart.setPickUpMethod(pm);
             cart.setRestaurant(rest);
             cart.setUser(loggedUser);
-            cart.setMenu(List.of(dish));
-            cart.setPickUpMethod(pm);
+            cart.setMenu(cartItems);                    // visi patiekalai!
+            cart.setQuantity(cartItems.size());
+            cart.setTotalPrice(
+                    cartItems.stream()
+                            .mapToDouble(c -> c.getPortionSize().getPrice())
+                            .sum()
+            );
 
-            // Admin can assign driver
-            if (loggedUser instanceof Admin && orderDriver.getValue() != null) {
+            if (loggedUser instanceof Admin && orderDriver.getValue() != null)
                 cart.setDriver(orderDriver.getValue());
-            }
 
             em.persist(cart);
             em.getTransaction().commit();
 
-            showAlert("Order created!");
+            showAlert("Order sent!");
 
-        } catch (Exception e) {
+            cartItems.clear();
+        }
+        catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error creating order.");
-        } finally {
+            showAlert("Order failed.");
+        }
+        finally {
             em.close();
         }
     }
 
 
+    // =====================================================================
     private void showAlert(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
         a.showAndWait();
     }
+
+    private void hideControlsByRole() {
+
+        // Client rodo tik meniu + cart funkcijas
+        if (loggedUser instanceof Client) {
+            orderDriver.setVisible(false);
+            orderDriver.setManaged(false);
+
+            status.setVisible(false);
+            status.setManaged(false);
+
+
+            // Paslėpti role pasirinkimą (CLIENT)
+            // jei pas tave toks yra
+            // pvz.: clientPickerBox.setVisible(false);
+
+        }
+
+        // Driver (kurjeris)
+        if (loggedUser instanceof Driver) {
+            // kurjeris negali rinktis driver pats
+            orderDriver.setVisible(false);
+            orderDriver.setManaged(false);
+
+            // negali pasirinkti status MANUALLY (nebent nori palikti)
+            status.setVisible(false);
+            status.setManaged(false);
+
+            // nerodo CLIENT pasirinkimo
+            // clientCombo.setVisible(false);
+        }
+
+    }
+    private void updateCartSummary() {
+        int quantity = cartItems.size();
+        double total = cartItems.stream()
+                .mapToDouble(c -> c.getPortionSize().getPrice())
+                .sum();
+
+        quantityValueLbl.setText(String.valueOf(quantity));
+        priceValueLbl.setText(String.format("%.2f €", total));
+    }
+
+
 }
