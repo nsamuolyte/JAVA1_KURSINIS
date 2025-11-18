@@ -27,6 +27,10 @@ public class OrderTab {
     @FXML private Label kiekisLbl;
     @FXML private Label priceValueLbl;
     @FXML private Label quantityValueLbl;
+    @FXML private CheckBox cutleryCheck;
+    @FXML private ComboBox<Client> clientPicker;
+
+
 
     @FXML private Button sendOrderBtn;
 
@@ -54,6 +58,19 @@ public class OrderTab {
         // kai pasirenkamas restoranas – užkrauti meniu
         restaurantPicker.valueProperty().addListener((obs, old, val) -> reloadMenu());
 
+        if (loggedUser instanceof Admin || loggedUser instanceof Restaurant) {
+            // sendOrderBtn disabled until client is selected
+            sendOrderBtn.setDisable(true);
+
+            clientPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+                sendOrderBtn.setDisable(newVal == null);
+            });
+        }
+
+        menu.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        if (loggedUser instanceof Admin || loggedUser instanceof Restaurant) {
+            loadClients();
+        }
         hideControlsByRole();
 
         // meniui leisti multi select
@@ -77,6 +94,8 @@ public class OrderTab {
                 else setText(c.getDescription() + " — " + c.getPortionSize().getPrice() + " €");
             }
         });
+        cutleryCheck.selectedProperty().addListener((obs, oldVal, newVal) -> updateCartSummary());
+
         updateCartSummary();
     }
 
@@ -101,6 +120,40 @@ public class OrderTab {
                 em.createQuery("FROM Driver", Driver.class).getResultList();
         orderDriver.setItems(FXCollections.observableArrayList(drivers));
         em.close();
+    }
+    private void loadClients() {
+        EntityManager em = emf.createEntityManager();
+        List<Client> clients = em.createQuery("FROM Client", Client.class).getResultList();
+        clientPicker.setItems(FXCollections.observableArrayList(clients));
+        em.close();
+
+        // --- RODYMAS DROPDOWNE ---
+        clientPicker.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Client c, boolean empty) {
+                super.updateItem(c, empty);
+                if (empty || c == null) {
+                    setText(null);
+                } else {
+                    setText(c.getId() + "  " + c.getName() + " " + c.getSurname() +
+                            " — " + c.getEmail());
+                }
+            }
+        });
+
+        // --- RODYMAS PASIRINKTAME LANGELYJE ---
+        clientPicker.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Client c, boolean empty) {
+                super.updateItem(c, empty);
+                if (empty || c == null) {
+                    setText(null);
+                } else {
+                    setText(c.getId() + "  " + c.getName() + " " + c.getSurname() +
+                            " — " + c.getEmail());
+                }
+            }
+        });
     }
 
 
@@ -181,7 +234,17 @@ public class OrderTab {
             cart.setOrderStatus(OrderStatus.PENDING);
             cart.setPickUpMethod(pm);
             cart.setRestaurant(rest);
-            cart.setUser(loggedUser);
+            if (loggedUser instanceof Admin || loggedUser instanceof Restaurant) {
+                Client selectedClient = clientPicker.getValue();
+                if (selectedClient == null) {
+                    showAlert("Please select a client for this order.");
+                    return;
+                }
+                cart.setUser(selectedClient);
+            } else {
+                cart.setUser(loggedUser);
+            }
+
             cart.setMenu(cartItems);                    // visi patiekalai!
             cart.setQuantity(cartItems.size());
             cart.setTotalPrice(
@@ -226,6 +289,9 @@ public class OrderTab {
             status.setVisible(false);
             status.setManaged(false);
 
+            clientPicker.setVisible(false);
+            clientPicker.setManaged(false);
+
 
             // Paslėpti role pasirinkimą (CLIENT)
             // jei pas tave toks yra
@@ -254,9 +320,16 @@ public class OrderTab {
                 .mapToDouble(c -> c.getPortionSize().getPrice())
                 .sum();
 
+        // cutlery kaina × patiekalų kiekis
+        if (cutleryCheck.isSelected()) {
+            double cutleryCost = quantity * 0.50;
+            total += cutleryCost;
+        }
+
         quantityValueLbl.setText(String.valueOf(quantity));
         priceValueLbl.setText(String.format("%.2f €", total));
     }
+
 
 
 }
