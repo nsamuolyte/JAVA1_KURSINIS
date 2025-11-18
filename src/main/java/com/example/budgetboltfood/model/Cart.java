@@ -14,74 +14,42 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+public class Cart {
 
-public class Cart
-{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected int cartId;
+    private int cartId;
 
-    protected int quantity;
-    protected double totalPrice;
-    protected LocalDate dateCreated;
+    private int quantity;
+    private double totalPrice;
+    private LocalDate dateCreated;
 
     @Enumerated(EnumType.STRING)
-    protected CartState cartState;
+    private CartState cartState;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;  // <<< N A U J A I
+
+    @Enumerated(EnumType.STRING)
+    private PickUpMethod pickUpMethod; // <<< N A U J A I
 
     @ManyToOne
     private Restaurant restaurant;
+
     @ManyToOne
     private User user;
+
     @ManyToOne
     private Driver driver;
+
     @ManyToMany
     private List<Cuisine> menu;
 
-    public Cart(int quantity, double totalPrice, LocalDate dateCreated, CartState cartState)
-    {
+
+    public Cart(int quantity, double totalPrice, LocalDate dateCreated, CartState cartState) {
         this.quantity = quantity;
         this.totalPrice = totalPrice;
         this.dateCreated = dateCreated;
-        this.cartState = cartState;
-    }
-
-    public int getCartId() {
-        return cartId;
-    }
-
-    public void setCartId(int cartId) {
-        this.cartId = cartId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public LocalDate getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(LocalDate dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public CartState getCartState() {
-        return cartState;
-    }
-
-    public void setCartState(CartState cartState) {
         this.cartState = cartState;
     }
 }

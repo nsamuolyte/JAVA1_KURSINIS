@@ -1,51 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="558.0" prefWidth="687.0"
-      xmlns="http://javafx.com/javafx/25"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.budgetboltfood.fxControllers.MainForm.MainForm">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="558.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budgetboltfood.fxControllers.MainForm.MainForm">
 
     <children>
 
-        <Button fx:id="atsijungti" layoutX="614.0" layoutY="5.0"
-                mnemonicParsing="false" onAction="#atsijungtiBT" text="SignOut"/>
+        <Button fx:id="atsijungti" layoutX="614.0" layoutY="5.0" mnemonicParsing="false" onAction="#atsijungtiBT" text="SignOut" />
 
-        <TabPane fx:id="mainTabPane" layoutX="4.0" layoutY="36.0"
-                 prefHeight="514.0" prefWidth="679.0"
-                 tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="mainTabPane" layoutX="4.0" layoutY="36.0" prefHeight="514.0" prefWidth="679.0" tabClosingPolicy="UNAVAILABLE">
 
             <tabs>
 
                 <!-- USER MANAGEMENT TAB -->
-                <Tab fx:id="userManagement" onSelectionChanged="#userManagementTab"
-                     text="Users Management">
+                <Tab fx:id="userManagement" onSelectionChanged="#userManagementTab" text="Users Management">
                     <content>
                         <AnchorPane prefHeight="483.0" prefWidth="686.0">
                             <children>
 
-                                <Accordion layoutX="24.0" layoutY="14.0"
-                                           prefHeight="407.0" prefWidth="617.0">
+                                <Accordion layoutX="24.0" layoutY="14.0" prefHeight="407.0" prefWidth="617.0">
                                     <panes>
-                                        <TitledPane fx:id="restaurantPane" text="Restaurant"/>
-                                        <TitledPane fx:id="adminPane" text="Admin"/>
-                                        <TitledPane fx:id="clientPane" text="Client"/>
-                                        <TitledPane fx:id="driverPane" text="Driver"/>
+                                        <TitledPane fx:id="restaurantPane" text="Restaurant" />
+                                        <TitledPane fx:id="adminPane" text="Admin" />
+                                        <TitledPane fx:id="clientPane" text="Client" />
+                                        <TitledPane fx:id="driverPane" text="Driver" />
                                     </panes>
                                 </Accordion>
 
-                                <Button fx:id="newUserAdd" layoutX="24.0" layoutY="428.0"
-                                        onAction="#newUserAddBT" text="Add New"/>
+                                <Button fx:id="newUserAdd" layoutX="24.0" layoutY="428.0" onAction="#newUserAddBT" text="Add New" />
 
-                                <Button fx:id="Edit" layoutX="122.0" layoutY="428.0"
-                                        onAction="#newUserAddBT" text="Edit"/>
+                                <Button fx:id="Edit" layoutX="122.0" layoutY="428.0" onAction="#newUserAddBT" text="Edit" />
 
-                                <Button fx:id="Save" layoutX="220.0" layoutY="428.0"
-                                        onAction="#saveBT" text="Save"/>
+                                <Button fx:id="Save" layoutX="220.0" layoutY="428.0" onAction="#saveBT" text="Save" />
 
                             </children>
                         </AnchorPane>
@@ -53,72 +48,27 @@
                 </Tab>
 
                 <!-- ORDER MANAGEMENT TAB -->
-                <Tab fx:id="orderManagement" onSelectionChanged="#orderManagementTab"
-                     text="Orders Management">
+                <Tab fx:id="orderManagement" text="Orders Management">
+
                     <content>
-                        <AnchorPane>
-                            <children>
-
-                                <AnchorPane layoutX="9.0" layoutY="14.0"
-                                            prefHeight="440.0" prefWidth="413.0">
-                                    <children>
-                                        <ListView fx:id="menu" layoutY="83.0"
-                                                  prefHeight="357.0" prefWidth="200.0"/>
-
-                                        <ComboBox fx:id="orderDriver" prefWidth="150.0"
-                                                  promptText="DRIVER"/>
-
-                                        <ComboBox fx:id="status" layoutY="40.0"
-                                                  prefWidth="150.0"
-                                                  promptText="STATUS"/>
-
-                                        <ComboBox layoutX="156.0" layoutY="-1.0"
-                                                  prefHeight="68.0"
-                                                  prefWidth="249.0"
-                                                  promptText="RESTAURANT"/>
-                                    </children>
-                                </AnchorPane>
-
-                                <AnchorPane fx:id="userOrder"
-                                            layoutX="465.0" layoutY="21.0"
-                                            prefHeight="440.0" prefWidth="200.0">
-
-                                    <children>
-                                        <ComboBox fx:id="atsiemimoBudas"
-                                                  layoutX="24.0" layoutY="151.0"
-                                                  prefWidth="150.0"
-                                                  promptText="Pick-up method"/>
-
-                                        <ListView fx:id="alergenai"
-                                                  layoutX="15.0" layoutY="226.0"
-                                                  prefHeight="200.0"
-                                                  prefWidth="170.0"/>
-
-                                        <Label fx:id="kainaLbl"
-                                               layoutX="13.0" layoutY="189.0"
-                                               text="Price:"/>
-
-                                        <Label fx:id="kiekisLbl"
-                                               layoutX="13.0" layoutY="206.0"
-                                               text="Quantity:"/>
-
-                                        <Button layoutX="24.0" layoutY="119.0"
-                                                text="SEND ORDER"/>
-                                    </children>
-
-                                </AnchorPane>
-
-                            </children>
-                        </AnchorPane>
+                        <fx:include fx:id="orderTabInclude" source="OrderManagment.fxml"/>
                     </content>
+
+
+
                 </Tab>
 
                 <!-- MENU MANAGEMENT TAB -->
                 <Tab fx:id="menuManagement" text="Menu Management">
                     <content>
-                        <fx:include fx:id="menuTabInclude" source="MenuManagement.fxml"/>
+                        <fx:include fx:id="menuTabInclude" source="MenuManagement.fxml" />
                     </content>
                 </Tab>
+            <Tab text="Chat Managment">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
 
             </tabs>
         </TabPane>
