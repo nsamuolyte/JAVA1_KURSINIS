@@ -22,6 +22,8 @@ public class OrderTab {
     @FXML private ListView<Cuisine> menu;
     @FXML private ListView<Cuisine> order;  // krepšelis
     @FXML private ListView<Alergens> alergenai;
+    @FXML private ListView<Cart> allOrders;
+
 
     @FXML private Label kainaLbl;
     @FXML private Label kiekisLbl;
@@ -51,6 +53,8 @@ public class OrderTab {
 
         loadRestaurants();
         loadDrivers();
+        loadAllOrders();
+
 
         status.setItems(FXCollections.observableArrayList(OrderStatus.values()));
         atsiemimoBudas.setItems(FXCollections.observableArrayList(PickUpMethod.values()));
@@ -110,6 +114,61 @@ public class OrderTab {
         restaurantPicker.setItems(FXCollections.observableArrayList(restaurants));
         em.close();
     }
+
+    private void loadAllOrders() {
+
+        EntityManager em = emf.createEntityManager();
+        List<Cart> orders;
+
+        // ADMIN + DRIVER -> visi orderiai
+        if (loggedUser instanceof Admin || loggedUser instanceof Driver) {
+            orders = em.createQuery(
+                    "FROM Cart ORDER BY cartId DESC", Cart.class
+            ).getResultList();
+        }
+        // RESTAURANT -> tik savo restorano orderiai
+        else if (loggedUser instanceof Restaurant) {
+            orders = em.createQuery(
+                            "SELECT c FROM Cart c WHERE c.restaurant.id = :restId ORDER BY c.cartId DESC",
+                            Cart.class
+                    )
+                    .setParameter("restId", loggedUser.getId())   // Restaurant user ID = restaurant ID
+                    .getResultList();
+        }
+        // CLIENT -> tik savo orderiai
+        else {
+            orders = em.createQuery(
+                            "SELECT c FROM Cart c WHERE c.user.id = :uid ORDER BY c.cartId DESC",
+                            Cart.class
+                    )
+                    .setParameter("uid", loggedUser.getId())
+                    .getResultList();
+        }
+
+        em.close();
+
+        allOrders.setItems(FXCollections.observableArrayList(orders));
+
+        allOrders.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Cart c, boolean empty) {
+                super.updateItem(c, empty);
+                if (empty || c == null) {
+                    setText(null);
+                } else {
+                    setText(
+                            "#" + c.getCartId() + " | " +
+                                    c.getUser().getName() + " " + c.getUser().getSurname() +
+                                    " | " + String.format("%.2f€", c.getTotalPrice()) +
+                                    " | " + c.getOrderStatus()
+                    );
+                }
+            }
+        });
+    }
+
+
+
 
     // =====================================================================
     // LOAD DRIVERS
