@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="menuRoot"
+            fx:controller="com.example.budgetboltfood.fxControllers.MainForm.MenuTab"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml">
+
+    <children>
+        <ListView fx:id="cuisineView" layoutX="20" layoutY="20" prefHeight="300" prefWidth="250"/>
+
+        <VBox spacing="10" layoutX="300" layoutY="20">
+            <ComboBox fx:id="selectRestaurant" promptText="Restaurant"/>
+            <ComboBox fx:id="cuisineTypeBox" promptText="Cuisine Type"/>
+            <ComboBox fx:id="ingredientsBox" promptText="Ingredients"/>
+            <ComboBox fx:id="alergensBox" promptText="Alergens"/>
+            <ComboBox fx:id="portionSizeBox" promptText="Portion Size"/>
+            <TextField fx:id="descriptionField" promptText="Dish name"/>
+            <Button text="SAVE" onAction="#saveCuisine"/>
+        </VBox>
+    </children>
+</AnchorPane>
+
