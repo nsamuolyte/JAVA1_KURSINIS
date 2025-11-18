@@ -116,7 +116,7 @@
                 <!-- MENU MANAGEMENT TAB -->
                 <Tab fx:id="menuManagement" text="Menu Management">
                     <content>
-                        <fx:include source="MenuManagement.fxml"/>
+                        <fx:include fx:id="menuTabInclude" source="MenuManagement.fxml"/>
                     </content>
                 </Tab>
 

@@ -26,33 +26,50 @@ public class MenuTab {
     // --------- INITIALIZE ----------
     @FXML
     public void initialize() {
+
+        // Fill dropdowns
         cuisineTypeBox.setItems(FXCollections.observableArrayList(CuisineType.values()));
         ingredientsBox.setItems(FXCollections.observableArrayList(Ingriedients.values()));
         alergensBox.setItems(FXCollections.observableArrayList(Alergens.values()));
         portionSizeBox.setItems(FXCollections.observableArrayList(PortionSize.values()));
 
+        // Fix missing closing bracket + ListCell formatting
         cuisineView.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Cuisine c, boolean empty) {
                 super.updateItem(c, empty);
-
-                if (empty || c == null) setText(null);
-                else setText("#" + c.getCuisineId()
-                        + " • " + c.getDescription()
-                        + " • " + c.getCuisineType()
-                        + " • " + c.getPortionSize());
+                if (empty || c == null) {
+                    setText(null);
+                } else {
+                    setText("#" + c.getCuisineId()
+                            + " • " + c.getDescription()
+                            + " • " + c.getCuisineType()
+                            + " • " + c.getPortionSize());
+                }
             }
         });
+
+        // ADMIN: refresh menu when picked restaurant changes
+        selectRestaurant.valueProperty().addListener((obs, oldV, newV) -> refreshMenuList());
     }
 
-    // --------- SETUP FROM MAINFORM ----------
+    // --------- INIT FROM MAIN FORM ----------
     public void init(EntityManagerFactory emf, User user) {
         this.emf = emf;
         this.loggedUser = user;
 
         loadRestaurants();
+
+        // If Admin → auto-select FIRST restaurant
+        if (loggedUser instanceof Admin) {
+            if (!selectRestaurant.getItems().isEmpty()) {
+                selectRestaurant.getSelectionModel().selectFirst();
+            }
+        }
+
         refreshMenuList();
 
+        // Restaurant user → hide restaurant picker
         if (!(loggedUser instanceof Admin)) {
             selectRestaurant.setVisible(false);
             selectRestaurant.setManaged(false);
@@ -66,15 +83,20 @@ public class MenuTab {
         em.close();
     }
 
-    // ---------------- SAVE -------------------
+    // ---------------- SAVE DISH -------------------
 
     @FXML
     private void saveCuisine() {
+
         Restaurant restaurant;
 
-        if (loggedUser instanceof Restaurant r) restaurant = r;
-        else if (loggedUser instanceof Admin) restaurant = selectRestaurant.getValue();
-        else return;
+        if (loggedUser instanceof Restaurant r) {
+            restaurant = r;
+        } else if (loggedUser instanceof Admin) {
+            restaurant = selectRestaurant.getValue();
+        } else {
+            return;
+        }
 
         if (restaurant == null) return;
 
@@ -119,10 +141,14 @@ public class MenuTab {
     }
 
     private void refreshMenuList() {
+
         Restaurant rest;
 
-        if (loggedUser instanceof Restaurant r) rest = r;
-        else rest = selectRestaurant.getValue();
+        if (loggedUser instanceof Restaurant r) {
+            rest = r;
+        } else {
+            rest = selectRestaurant.getValue();
+        }
 
         if (rest == null) {
             cuisineView.getItems().clear();
@@ -140,6 +166,40 @@ public class MenuTab {
         em.close();
     }
 
+    @FXML
     public void saveCuisineBT(ActionEvent event) {
+        saveCuisine();
     }
+
+    @FXML
+    public void deleteCuisine(ActionEvent event) {
+
+        Cuisine selected = cuisineView.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("No dish selected");
+            alert.setContentText("Please select a dish from the list before deleting.");
+            alert.show();
+            return;
+        }
+
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            Cuisine managed = em.find(Cuisine.class, selected.getCuisineId());
+            if (managed != null) {
+                em.remove(managed);
+            }
+
+            em.getTransaction().commit();
+
+        } finally {
+            em.close();
+        }
+
+        refreshMenuList();
+    }
+
 }

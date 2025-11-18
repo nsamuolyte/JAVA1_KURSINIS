@@ -1,7 +1,10 @@
 package com.example.budgetboltfood.fxControllers.MainForm;
 
 import com.example.budgetboltfood.HelloApplication;
-import com.example.budgetboltfood.model.*;
+import com.example.budgetboltfood.fxControllers.UserForm;
+import com.example.budgetboltfood.model.Driver;
+import com.example.budgetboltfood.model.Restaurant;
+import com.example.budgetboltfood.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -21,76 +24,53 @@ import java.util.List;
 
 public class MainForm {
 
-    // ----------- UI ELEMENTS ------------
-
+    // --------- ORDER TAB ---------
     @FXML private AnchorPane userOrder;
     @FXML private ComboBox<String> atsiemimoBudas;
     @FXML private ComboBox<Driver> orderDriver;
-    @FXML private TabPane mainTabPane;
 
+    // --------- MAIN TABS ---------
+    @FXML private TabPane mainTabPane;
+    @FXML private Tab userManagement;
+    @FXML private Tab orderManagement;
+    @FXML private Tab menuManagement;
+    @FXML private MenuTab menuTabIncludeController;
+
+
+    // --------- TITLED PANES (Accordion inside UserManagement) ---------
     @FXML private TitledPane restaurantPane;
     @FXML private TitledPane adminPane;
     @FXML private TitledPane clientPane;
     @FXML private TitledPane driverPane;
 
-    @FXML private Tab menuManagement;
-    @FXML private Tab orderManagement;
-    @FXML private Tab userManagement;
-    @FXML private MenuTab menuController;
+    @FXML private Button atsijungti;
+    @FXML private Button newUserAdd;
+    @FXML private Button Edit;
+    @FXML private Button Save;
 
-
-    // DB + user
     private EntityManagerFactory entityManagerFactory;
     private User loggedInUser;
 
-    // -------------------------------------------
     @FXML
     public void initialize() {
 
-        atsiemimoBudas.getItems().addAll("Restorane", "Pristatymas");
-
-        // DB init
         entityManagerFactory = Persistence.createEntityManagerFactory("login");
 
-        loadOrderDriverAndRestaurants();
-        loadAllDataIntoMainTables();
+        loadDrivers();
+        loadAllPanes();
 
-        loadRestaurantPane();
+        atsiemimoBudas.getItems().addAll("Restorane", "Pristatymas");
+    }
+
+    // =====================================================================================
+    //                                  LOAD SUB-PANELS
+    // =====================================================================================
+
+    private void loadAllPanes() {
         loadAdminPane();
         loadClientPane();
         loadDriverPane();
-    }
-
-    // -------------------------------------------
-    private void loadOrderDriverAndRestaurants() {
-        EntityManager em = entityManagerFactory.createEntityManager();
-
-        orderDriver.getItems().setAll(
-                em.createQuery("FROM Driver", Driver.class).getResultList()
-        );
-
-        // Restaurant dropdown jau išmestas iš Main, todėl čia nieko daugiau nereikia.
-        em.close();
-    }
-
-    private void loadAllDataIntoMainTables() {
-        // Tuščias, nes viskas iškelta į atskirus Controller
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.close();
-    }
-
-    // ---------------------- LOAD TITLED PANES ------------------------
-
-    private void loadRestaurantPane() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/RestTitledPane.fxml"));
-            Parent content = loader.load();
-
-            RestaurantTable controller = loader.getController();
-            controller.setEntityManagerFactory(entityManagerFactory);
-
-            restaurantPane.setContent(content);
-        } catch (Exception e) { e.printStackTrace(); }
+        loadRestaurantPane();
     }
 
     private void loadAdminPane() {
@@ -102,7 +82,9 @@ public class MainForm {
             controller.setEntityManagerFactory(entityManagerFactory);
 
             adminPane.setContent(content);
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadClientPane() {
@@ -114,7 +96,9 @@ public class MainForm {
             controller.setEntityManagerFactory(entityManagerFactory);
 
             clientPane.setContent(content);
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadDriverPane() {
@@ -126,19 +110,60 @@ public class MainForm {
             controller.setEntityManagerFactory(entityManagerFactory);
 
             driverPane.setContent(content);
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    // ------------------------- ROLES -------------------------------
+    private void loadRestaurantPane() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/RestTitledPane.fxml"));
+            Parent content = loader.load();
+
+            RestaurantTable controller = loader.getController();
+            controller.setEntityManagerFactory(entityManagerFactory);
+
+            restaurantPane.setContent(content);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // =====================================================================================
+    //                                  LOAD DRIVERS / RESTAURANTS
+    // =====================================================================================
+
+    private void loadDrivers() {
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        List<Driver> drivers = em.createQuery("FROM Driver", Driver.class).getResultList();
+        orderDriver.getItems().setAll(drivers);
+
+        em.close();
+    }
+
+    // =====================================================================================
+    //                                  LOGIN → SET DATA
+    // =====================================================================================
 
     public void setData(EntityManagerFactory emf, User user) {
         this.entityManagerFactory = emf;
         this.loggedInUser = user;
 
-        restrictAccessByRole(); // valdymas TabPane
+        restrictAccessByRole();
+
+        // INIT MENU TAB (VERY IMPORTANT)
+        if (menuTabIncludeController != null) {
+            menuTabIncludeController.init(entityManagerFactory, loggedInUser);
+        }
     }
 
+    // =====================================================================================
+    //                                  ROLE CONTROL
+    // =====================================================================================
+
     private void restrictAccessByRole() {
+
         if (loggedInUser == null) return;
 
         String role = loggedInUser.getClass().getSimpleName();
@@ -163,17 +188,18 @@ public class MainForm {
         }
     }
 
-    // ----------------------------------------------------
+    // =====================================================================================
+    //                               BUTTON ACTIONS FROM FXML
+    // =====================================================================================
 
-
+    @FXML
     public void atsijungtiBT(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-form.fxml"));
-            Parent root = fxmlLoader.load();
+            FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("login-form.fxml"));
+            Parent root = loader.load();
 
-            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) atsijungti.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Login");
             stage.show();
 
         } catch (IOException e) {
@@ -181,16 +207,38 @@ public class MainForm {
         }
     }
 
-    public void newUserAddBT(ActionEvent event) {}
-    public void saveBT(ActionEvent event) {}
-    public void orderManagementTab(Event event) {}
-    public void saveCuisineBT(ActionEvent event) {}
-    public void userManagementTab(Event event) {}
-    public void menuManagementTab(Event event) {
-        if (menuController != null) {
-            menuController.init(entityManagerFactory, loggedInUser);
+    @FXML
+    public void newUserAddBT(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
+            Parent root = loader.load();
+
+            UserForm form = loader.getController();
+            form.setData(entityManagerFactory);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Register New User");
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Nepavyko atidaryti registracijos lango!");
         }
     }
 
+    @FXML
+    public void saveBT(ActionEvent event) {
+        System.out.println("Save button pressed – not implemented yet.");
+    }
 
+    @FXML
+    public void userManagementTab(Event event) {}
+
+    @FXML
+    public void orderManagementTab(Event event) {}
+
+    @FXML
+    public void menuManagementTab(Event event) {}
 }

@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="menuRoot"
-            fx:controller="com.example.budgetboltfood.fxControllers.MainForm.MenuTab"
-            xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml">
+<AnchorPane fx:id="menuRoot" prefHeight="320.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budgetboltfood.fxControllers.MainForm.MenuTab">
 
     <children>
-        <ListView fx:id="cuisineView" layoutX="20" layoutY="20" prefHeight="300" prefWidth="250"/>
+        <ListView fx:id="cuisineView" layoutX="20" layoutY="20" prefHeight="300" prefWidth="355.0" />
 
-        <VBox spacing="10" layoutX="300" layoutY="20">
-            <ComboBox fx:id="selectRestaurant" promptText="Restaurant"/>
-            <ComboBox fx:id="cuisineTypeBox" promptText="Cuisine Type"/>
-            <ComboBox fx:id="ingredientsBox" promptText="Ingredients"/>
-            <ComboBox fx:id="alergensBox" promptText="Alergens"/>
-            <ComboBox fx:id="portionSizeBox" promptText="Portion Size"/>
-            <TextField fx:id="descriptionField" promptText="Dish name"/>
-            <Button text="SAVE" onAction="#saveCuisine"/>
+        <VBox layoutX="431.0" layoutY="14.0" spacing="10">
+            <ComboBox fx:id="selectRestaurant" promptText="Restaurant" />
+            <ComboBox fx:id="cuisineTypeBox" promptText="Cuisine Type" />
+            <ComboBox fx:id="ingredientsBox" promptText="Ingredients" />
+            <ComboBox fx:id="alergensBox" promptText="Alergens" />
+            <ComboBox fx:id="portionSizeBox" promptText="Portion Size" />
+            <TextField fx:id="descriptionField" promptText="Dish name" />
+            <Button onAction="#saveCuisine" text="SAVE" />
+         <Button onAction="#deleteCuisine" text="DELETE" />
         </VBox>
     </children>
 </AnchorPane>
-
