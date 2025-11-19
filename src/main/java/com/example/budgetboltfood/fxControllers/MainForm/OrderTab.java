@@ -160,6 +160,30 @@ public class OrderTab {
                                     " | " + String.format("%.2f€", c.getTotalPrice()) +
                                     " | " + c.getOrderStatus()
                     );
+
+                    // === COLORING ===
+                    if (c.getOrderStatus() == OrderStatus.CANCELLED) {
+                        setStyle("-fx-text-fill: red;");
+                    }
+                    else if (c.getOrderStatus() == OrderStatus.ON_THE_WAY) {
+                        setStyle("-fx-text-fill: blue;");
+                    }
+                    else if (c.getOrderStatus() == OrderStatus.ACCEPTED) {
+                        setStyle("-fx-text-fill: yellow;");
+                    }
+                    else if (c.getOrderStatus() == OrderStatus.IN_PROGRESS) {
+                        setStyle("-fx-text-fill: pink;");
+                    }
+                    else if (c.getOrderStatus() == OrderStatus.DELIVERED) {
+                        setStyle("-fx-text-fill: green;");
+                    }
+                    else if (c.getOrderStatus() == OrderStatus.READY) {
+                        setStyle("-fx-text-fill: purple;");
+                    }
+                    else {
+                        setStyle(""); // normal
+                    }
+
                 }
             }
         });
