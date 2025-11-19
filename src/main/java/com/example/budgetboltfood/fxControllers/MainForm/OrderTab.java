@@ -13,6 +13,8 @@ import java.util.List;
 
 public class OrderTab {
 
+    public Button addBT;
+    public Button editBT;
     // === UI ===
     @FXML private ComboBox<Driver> orderDriver;
     @FXML private ComboBox<OrderStatus> status;
@@ -24,7 +26,6 @@ public class OrderTab {
     @FXML private ListView<Alergens> alergenai;
     @FXML private ListView<Cart> allOrders;
 
-
     @FXML private Label kainaLbl;
     @FXML private Label kiekisLbl;
     @FXML private Label priceValueLbl;
@@ -32,17 +33,16 @@ public class OrderTab {
     @FXML private CheckBox cutleryCheck;
     @FXML private ComboBox<Client> clientPicker;
 
+    @FXML private ListView<Cart> orderList;
 
 
     @FXML private Button sendOrderBtn;
 
-    // === UI krepšelis (tik ekrane, ne DB) ===
     private final ObservableList<Cuisine> cartItems = FXCollections.observableArrayList();
 
     // === INTERNAL ===
     private EntityManagerFactory emf;
     private User loggedUser;
-
 
     // =====================================================================
     // INIT
@@ -54,7 +54,6 @@ public class OrderTab {
         loadRestaurants();
         loadDrivers();
         loadAllOrders();
-
 
         status.setItems(FXCollections.observableArrayList(OrderStatus.values()));
         atsiemimoBudas.setItems(FXCollections.observableArrayList(PickUpMethod.values()));
@@ -102,7 +101,6 @@ public class OrderTab {
 
         updateCartSummary();
     }
-
 
     // =====================================================================
     // LOAD RESTAURANTS
@@ -304,7 +302,7 @@ public class OrderTab {
                 cart.setUser(loggedUser);
             }
 
-            cart.setMenu(cartItems);                    // visi patiekalai!
+            cart.setMenu(cartItems); // visi patiekalai!
             cart.setQuantity(cartItems.size());
             cart.setTotalPrice(
                     cartItems.stream()
@@ -338,6 +336,67 @@ public class OrderTab {
         a.showAndWait();
     }
 
+    @FXML
+    private void addDriverToOrder() {
+
+        Cart selectedOrder = allOrders.getSelectionModel().getSelectedItem();
+        Driver selectedDriver = orderDriver.getValue();
+        OrderStatus selectedStatus = status.getValue(); // gali būti null
+
+        if (selectedOrder == null) {
+            showAlert("Please select an order first.");
+            return;
+        }
+
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+
+            Cart cart = em.find(Cart.class, selectedOrder.getCartId());
+
+            boolean hadNoDriverBefore = (cart.getDriver() == null);
+
+            // === UPDATE DRIVER IF SELECTED ===
+            if (selectedDriver != null) {
+                cart.setDriver(selectedDriver);
+
+                // jei PRIDEDAMAS pirmas driveris — status -> ON_THE_WAY
+                if (hadNoDriverBefore) {
+                    cart.setOrderStatus(OrderStatus.ON_THE_WAY);
+                }
+            }
+
+            // === UPDATE STATUS ONLY IF USER SELECTED IT ===
+            if (selectedStatus != null) {
+                cart.setOrderStatus(selectedStatus);
+            }
+
+            em.merge(cart);
+            em.getTransaction().commit();
+
+            showAlert("Order updated!");
+
+            loadAllOrders(); // refresh
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Could not update order.");
+        } finally {
+            em.close();
+        }
+    }
+
+
+    private void reloadOrdersList() {
+        EntityManager em = emf.createEntityManager();
+        List<Cart> carts = em.createQuery("FROM Cart", Cart.class).getResultList();
+        orderList.setItems(FXCollections.observableArrayList(carts));
+        em.close();
+    }
+
+
+
     private void hideControlsByRole() {
 
         // Client rodo tik meniu + cart funkcijas
@@ -346,15 +405,19 @@ public class OrderTab {
             orderDriver.setManaged(false);
 
             status.setVisible(false);
+            status.setVisible(false);
             status.setManaged(false);
 
             clientPicker.setVisible(false);
             clientPicker.setManaged(false);
 
+            addBT.setVisible(false);
+            addBT.setManaged(false);
 
-            // Paslėpti role pasirinkimą (CLIENT)
-            // jei pas tave toks yra
-            // pvz.: clientPickerBox.setVisible(false);
+            editBT.setVisible(false);
+            editBT.setManaged(false);
+
+
 
         }
 
@@ -367,9 +430,6 @@ public class OrderTab {
             // negali pasirinkti status MANUALLY (nebent nori palikti)
             status.setVisible(false);
             status.setManaged(false);
-
-            // nerodo CLIENT pasirinkimo
-            // clientCombo.setVisible(false);
         }
 
     }
@@ -387,6 +447,68 @@ public class OrderTab {
 
         quantityValueLbl.setText(String.valueOf(quantity));
         priceValueLbl.setText(String.format("%.2f €", total));
+    }
+    @FXML
+    private void canceling() {
+
+        Cart selected = allOrders.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Please select an order to cancel.");
+            return;
+        }
+
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+
+            Cart cart = em.find(Cart.class, selected.getCartId());
+            cart.setOrderStatus(OrderStatus.CANCELLED);
+
+            em.merge(cart);
+            em.getTransaction().commit();
+
+            showAlert("Order cancelled!");
+
+            loadAllOrders(); // reload list
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Could not cancel order.");
+        } finally {
+            em.close();
+        }
+    }
+
+
+    @FXML
+    private void reloadOrders() {
+        loadAllOrders();
+        showAlert("Orders reloaded!");
+    }
+
+    @FXML
+    private void editOrder() {
+
+        Cart selected = allOrders.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Please select an order to edit.");
+            return;
+        }
+
+        // set driver if exists
+        if (selected.getDriver() != null) {
+            orderDriver.setValue(selected.getDriver());
+        } else {
+            orderDriver.setValue(null);
+        }
+
+        // set status
+        status.setValue(selected.getOrderStatus());
+
+        showAlert("Order loaded. Make changes and press ADD to save.");
     }
 
 
