@@ -15,21 +15,23 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class ClientTable {
 
-    @FXML private TableView<Client> clientTableView;
-
-    @FXML private TableColumn<Client, Integer> clientIdColumn;
-    @FXML private TableColumn<Client, String> clientNameColumn;
-    @FXML private TableColumn<Client, String> clientEmailColumn;
-    @FXML private TableColumn<Client, String> clientPasswordColumn;
-    @FXML private TableColumn<Client, String> clientPhoneColumn;
-    @FXML private TableColumn<Client, Void> clientDeleteColumn;
+    @FXML
+    private TableView<Client> clientTableView;
+    @FXML
+    private TableColumn<Client, Integer> clientIdColumn;
+    @FXML
+    private TableColumn<Client, String> clientNameColumn;
+    @FXML
+    private TableColumn<Client, String> clientEmailColumn;
+    @FXML
+    private TableColumn<Client, String> clientPasswordColumn;
+    @FXML
+    private TableColumn<Client, String> clientPhoneColumn;
+    @FXML
+    private TableColumn<Client, Void> clientDeleteColumn;
 
     private EntityManagerFactory emf;
 
-    /**
-     * ŠITA DALIS TIK LENTELĖS KOLONOMS!
-     * JOKIO DB ČIA NEGALI BŪTI!
-     */
     @FXML
     public void initialize() {
         clientIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -44,7 +46,7 @@ public class ClientTable {
         clientNameColumn.setOnEditCommit(e -> {
             Client d = e.getRowValue();
             d.setName(e.getNewValue());
-            saveClient(d);   // <- čia SAUGO Į DB
+            saveClient(d);
         });
 
         clientEmailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -109,7 +111,6 @@ public class ClientTable {
             Client managed = em.find(Client.class, client.getId());
             if (managed != null) em.remove(managed);
             em.getTransaction().commit();
-
             clientTableView.getItems().remove(client);
 
         } catch (Exception ex) {
@@ -121,12 +122,9 @@ public class ClientTable {
     }
 
     private void saveClient(Client updated) {
-
         EntityManager em = emf.createEntityManager();
-
         try {
             em.getTransaction().begin();
-
             Client db = em.find(Client.class, updated.getId());
             if (db != null) {
                 db.setName(updated.getName());
@@ -134,9 +132,7 @@ public class ClientTable {
                 db.setPassword(updated.getPassword());
                 db.setPhoneNumber(updated.getPhoneNumber());
             }
-
             em.getTransaction().commit();
-
             System.out.println("Client updated: " + updated.getName());
 
         } catch (Exception e) {

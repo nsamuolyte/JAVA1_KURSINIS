@@ -3,6 +3,7 @@ package com.example.budgetboltfood.fxControllers;
 import com.example.budgetboltfood.HelloApplication;
 import com.example.budgetboltfood.hibernateControl.GenericHibernate;
 import com.example.budgetboltfood.model.*;
+import com.example.budgetboltfood.utils.Validator;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import javafx.event.ActionEvent;
@@ -70,6 +71,19 @@ public class UserForm implements Serializable {
     @FXML
     public void createUser(ActionEvent event)
     {
+        if (nameField.getText().isEmpty() || surnameField.getText().isEmpty() ||
+                emailField.getText().isEmpty() || phoneField.getText().isEmpty() || pwField.getText().isEmpty()) {
+            showAlert("Visi laukai privalo būti užpildyti!");
+            return;
+        }
+        if (!Validator.isValidEmail(emailField.getText())) { showAlert("Neteisingas el. paštas"); return; }
+
+        if (!Validator.isValidPhone(phoneField.getText())) { showAlert("Neteisingas telefono numeris"); return; }
+
+        if (!Validator.isValidBirthDate2(calendarBD.getValue())) { showAlert("Gimimo data negali būti ateityje"); return; }
+
+        if (!Validator.isAtLeast16(calendarBD.getValue())) { showAlert("Naudotojas turi būti bent 16 metų!"); return; }
+
         if (clientRB.isSelected()) {
             Client client = new Client (emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), adressField.getText());
             genericHibernate.create(client);
@@ -86,7 +100,7 @@ public class UserForm implements Serializable {
             Driver driver = new Driver(emailField.getText(), pwField.getText(), nameField.getText(), surnameField.getText(), phoneField.getText(), calendarBD.getValue(), carTypeBox.getValue(), carPatesField.getText(), carMakeBox.getValue(), carColourBox.getValue());
             genericHibernate.create(driver);
         }
-        // ---------- UŽDAROME REGISTRACIJOS LANGĄ ----------
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
@@ -179,6 +193,13 @@ public class UserForm implements Serializable {
         carColourBox.getItems().setAll(VehicleColor.values());
         cuisineTypeField.getItems().setAll(CuisineType.values());
         restaurantStatus.getItems().setAll(RestaurantStatus.values());
+    }
+
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 
     public void cancel(ActionEvent event) throws IOException

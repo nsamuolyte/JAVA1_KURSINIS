@@ -12,28 +12,33 @@ import java.util.List;
 
 public class MenuTab {
 
-    @FXML private ListView<Cuisine> cuisineView;
-    @FXML private ComboBox<CuisineType> cuisineTypeBox;
-    @FXML private ComboBox<Ingriedients> ingredientsBox;
-    @FXML private ComboBox<Alergens> alergensBox;
-    @FXML private ComboBox<PortionSize> portionSizeBox;
-    @FXML private TextField descriptionField;
-    @FXML private ComboBox<Restaurant> selectRestaurant;
+    @FXML
+    private ListView<Cuisine> cuisineView;
+    @FXML
+    private ComboBox<CuisineType> cuisineTypeBox;
+    @FXML
+    private ComboBox<Ingriedients> ingredientsBox;
+    @FXML
+    private ComboBox<Alergens> alergensBox;
+    @FXML
+    private ComboBox<PortionSize> portionSizeBox;
+    @FXML
+    private TextField descriptionField;
+    @FXML
+    private ComboBox<Restaurant> selectRestaurant;
 
     private EntityManagerFactory emf;
     private User loggedUser;
 
-    // --------- INITIALIZE ----------
+
     @FXML
     public void initialize() {
 
-        // Fill dropdowns
         cuisineTypeBox.setItems(FXCollections.observableArrayList(CuisineType.values()));
         ingredientsBox.setItems(FXCollections.observableArrayList(Ingriedients.values()));
         alergensBox.setItems(FXCollections.observableArrayList(Alergens.values()));
         portionSizeBox.setItems(FXCollections.observableArrayList(PortionSize.values()));
 
-        // Fix missing closing bracket + ListCell formatting
         cuisineView.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Cuisine c, boolean empty) {
@@ -49,27 +54,20 @@ public class MenuTab {
             }
         });
 
-        // ADMIN: refresh menu when picked restaurant changes
         selectRestaurant.valueProperty().addListener((obs, oldV, newV) -> refreshMenuList());
     }
 
-    // --------- INIT FROM MAIN FORM ----------
     public void init(EntityManagerFactory emf, User user) {
         this.emf = emf;
         this.loggedUser = user;
-
         loadRestaurants();
 
-        // If Admin → auto-select FIRST restaurant
         if (loggedUser instanceof Admin) {
             if (!selectRestaurant.getItems().isEmpty()) {
                 selectRestaurant.getSelectionModel().selectFirst();
             }
         }
-
         refreshMenuList();
-
-        // Restaurant user → hide restaurant picker
         if (!(loggedUser instanceof Admin)) {
             selectRestaurant.setVisible(false);
             selectRestaurant.setManaged(false);
@@ -82,8 +80,6 @@ public class MenuTab {
         selectRestaurant.setItems(FXCollections.observableList(list));
         em.close();
     }
-
-    // ---------------- SAVE DISH -------------------
 
     @FXML
     private void saveCuisine() {
@@ -118,13 +114,10 @@ public class MenuTab {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-
             Restaurant managed = em.find(Restaurant.class, restaurant.getId());
             cuisine.setRestaurantManu(managed);
-
             em.persist(cuisine);
             em.getTransaction().commit();
-
             clearForm();
             refreshMenuList();
         } finally {

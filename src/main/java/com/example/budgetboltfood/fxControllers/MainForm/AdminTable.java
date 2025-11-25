@@ -16,13 +16,18 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class AdminTable {
 
-    @FXML private TableView<Admin> adminTableView;
-
-    @FXML private TableColumn<Admin, Integer> adminIdColumn;
-    @FXML private TableColumn<Admin, String> adminNameColumn;
-    @FXML private TableColumn<Admin, String> adminEmailColumn;
-    @FXML private TableColumn<Admin, String> adminPasswordColumn;
-    @FXML private TableColumn<Admin, Void> adminDeleteColumn;
+    @FXML
+    private TableView<Admin> adminTableView;
+    @FXML
+    private TableColumn<Admin, Integer> adminIdColumn;
+    @FXML
+    private TableColumn<Admin, String> adminNameColumn;
+    @FXML
+    private TableColumn<Admin, String> adminEmailColumn;
+    @FXML
+    private TableColumn<Admin, String> adminPasswordColumn;
+    @FXML
+    private TableColumn<Admin, Void> adminDeleteColumn;
 
     private EntityManagerFactory emf;
 
@@ -40,7 +45,7 @@ public class AdminTable {
         adminNameColumn.setOnEditCommit(e -> {
             Admin d = e.getRowValue();
             d.setName(e.getNewValue());
-            saveAdmin(d);   // <- čia SAUGO Į DB
+            saveAdmin(d);
         });
 
         adminEmailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -109,25 +114,18 @@ public class AdminTable {
         }
     }
 
-    private void saveAdmin(Admin updated)
-    {
-
+    private void saveAdmin(Admin updated) {
         EntityManager em = emf.createEntityManager();
-
         try {
             em.getTransaction().begin();
-
             Admin db = em.find(Admin.class, updated.getId());
             if (db != null) {
                 db.setName(updated.getName());
                 db.setEmail(updated.getEmail());
                 db.setPassword(updated.getPassword());
             }
-
             em.getTransaction().commit();
-
             System.out.println("Admin updated: " + updated.getName());
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

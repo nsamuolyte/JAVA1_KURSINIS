@@ -23,52 +23,48 @@ import java.util.List;
 
 public class MainForm {
 
-    // === MAIN TABS ===
-    @FXML private TabPane mainTabPane;
-    @FXML private Tab userManagement;
-    @FXML private Tab orderManagement;
-    @FXML private Tab menuManagement;
-    @FXML private Tab chatManagement;
+    @FXML
+    private TabPane mainTabPane;
+    @FXML
+    private Tab userManagement;
+    @FXML
+    private Tab orderManagement;
+    @FXML
+    private Tab menuManagement;
+    @FXML
+    private Tab chatManagement;
 
-    // === USER MANAGEMENT TITLED PANES ===
-    @FXML private TitledPane restaurantPane;
-    @FXML private TitledPane adminPane;
-    @FXML private TitledPane clientPane;
-    @FXML private TitledPane driverPane;
+    @FXML
+    private TitledPane restaurantPane;
+    @FXML
+    private TitledPane adminPane;
+    @FXML
+    private TitledPane clientPane;
+    @FXML
+    private TitledPane driverPane;
 
-    // === MENU TAB injected by fx:include (controller) ===
-    @FXML private MenuTab menuTabIncludeController;
+    @FXML
+    private MenuTab menuTabIncludeController;
+    @FXML
+    private ChatTab chatTabIncludeController;
+    @FXML
+    private AnchorPane orderTabInclude;
 
-    // === ORDER TAB root (fx:include gives only Node!) ===
-
-    @FXML private AnchorPane orderTabInclude;
-
-    // === UI BUTTONS ===
-    @FXML private Button atsijungti;
-    @FXML private Button newUserAdd;
-
-    @FXML private ChatTab chatTabIncludeController;
+    @FXML
+    private Button atsijungti;
+    @FXML
+    private Button newUserAdd;
 
     private EntityManagerFactory entityManagerFactory;
     private User loggedInUser;
 
-
-    // =====================================================================
-    // INITIALIZE — called AFTER FXML loads
-    // =====================================================================
     @FXML
     public void initialize() {
         entityManagerFactory = Persistence.createEntityManagerFactory("login");
-
-
-        loadManagementPanes();  // Admin/Client/Driver/Restaurant
-        loadOrderTab();         // Load Order Tab controller manually
+        loadManagementPanes();
+        loadOrderTab();
     }
 
-
-    // =====================================================================
-    // LOAD TITLED PANES
-    // =====================================================================
     private void loadManagementPanes() {
         loadAdminPane();
         loadClientPane();
@@ -78,126 +74,87 @@ public class MainForm {
 
     private void loadAdminPane() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/budgetboltfood/AdminTitledPane.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/AdminTitledPane.fxml"));
             Parent content = loader.load();
             AdminTable ctrl = loader.getController();
             ctrl.setEntityManagerFactory(entityManagerFactory);
             adminPane.setContent(content);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     private void loadClientPane() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/budgetboltfood/ClientTitledPane.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/ClientTitledPane.fxml"));
             Parent content = loader.load();
             ClientTable ctrl = loader.getController();
             ctrl.setEntityManagerFactory(entityManagerFactory);
             clientPane.setContent(content);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     private void loadDriverPane() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/budgetboltfood/DriverTitledPane.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/DriverTitledPane.fxml"));
             Parent content = loader.load();
             DriverTable ctrl = loader.getController();
             ctrl.setEntityManagerFactory(entityManagerFactory);
             driverPane.setContent(content);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     private void loadRestaurantPane() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/budgetboltfood/RestTitledPane.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/RestTitledPane.fxml"));
             Parent content = loader.load();
             RestaurantTable ctrl = loader.getController();
             ctrl.setEntityManagerFactory(entityManagerFactory);
             restaurantPane.setContent(content);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
-
-    // =====================================================================
-    // LOAD ORDER TAB MANUALLY BECAUSE fx:include ONLY LOADS NODE!
-    // =====================================================================
     private void loadOrderTab() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/budgetboltfood/OrderManagment.fxml")
-            );
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/budgetboltfood/OrderManagment.fxml"));
             AnchorPane pane = loader.load();
             OrderTab orderController = loader.getController();
             orderController.init(entityManagerFactory, loggedInUser, chatTabIncludeController);
-
-
             orderTabInclude.getChildren().setAll(pane);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-
-    // =====================================================================
-    // LOGIN → PASSES ENTITY MANAGER FACTORY + LOGGED-IN USER
-    // =====================================================================
     public void setData(EntityManagerFactory emf, User logged) {
-
         this.entityManagerFactory = emf;
         this.loggedInUser = logged;
-
-        if (menuTabIncludeController != null)
-            menuTabIncludeController.init(emf, loggedInUser);
+        if (menuTabIncludeController != null) menuTabIncludeController.init(emf, loggedInUser);
         loadOrderTab();
-
         chatTabIncludeController.init(emf, loggedInUser);
-
         restrictAccessByRole();
     }
 
-
-    // =====================================================================
-    // ROLE: WHICH TABS YOU SEE
-    // =====================================================================
     private void restrictAccessByRole() {
-
         if (loggedInUser == null) return;
-
         String role = loggedInUser.getClass().getSimpleName();
-
         switch (role) {
             case "Admin" -> {
-                mainTabPane.getTabs().setAll(userManagement, orderManagement, menuManagement, chatManagement);
+                mainTabPane.getTabs().setAll(userManagement, orderManagement, menuManagement);
             }
-
             case "Client" -> {
                 mainTabPane.getTabs().setAll(orderManagement, chatManagement);
             }
-
             case "Driver" -> {
                 mainTabPane.getTabs().setAll(orderManagement, chatManagement);
             }
-
             case "Restaurant" -> {
                 mainTabPane.getTabs().setAll(orderManagement, menuManagement, chatManagement);
             }
         }
     }
-
-
-    // =====================================================================
-    // BUTTON ACTIONS
-    // =====================================================================
 
     @FXML
     public void atsijungtiBT(ActionEvent event) {
@@ -217,23 +174,28 @@ public class MainForm {
         try {
             FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
             Parent root = loader.load();
-
             UserForm form = loader.getController();
             form.setData(entityManagerFactory);
-
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Register New User");
             stage.setResizable(false);
             stage.show();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @FXML public void userManagementTab(Event e) {}
-    @FXML public void orderManagementTab(Event e) {}
-    @FXML public void menuManagementTab(Event e) {}
+    @FXML
+    public void userManagementTab(Event e) {
+    }
+
+    @FXML
+    public void orderManagementTab(Event e) {
+    }
+
+    @FXML
+    public void menuManagementTab(Event e) {
+    }
 
 }

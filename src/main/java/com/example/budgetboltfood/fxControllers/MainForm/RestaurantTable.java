@@ -14,30 +14,34 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class RestaurantTable {
 
-    @FXML private TableView<Restaurant> restaurantTableView;
-    @FXML private TableColumn<Restaurant, Integer> restaurantIdColumn;
-    @FXML private TableColumn<Restaurant, String> restaurantNameColumn;
-    @FXML private TableColumn<Restaurant, String> restaurantEmailColumn;
-    @FXML private TableColumn<Restaurant, String> restaurantPasswordColumn;
-    @FXML private TableColumn<Restaurant, String> restaurantPhoneColumn;
-    @FXML private TableColumn<Restaurant, Void> restaurantDeleteColumn;
+    @FXML
+    private TableView<Restaurant> restaurantTableView;
+    @FXML
+    private TableColumn<Restaurant, Integer> restaurantIdColumn;
+    @FXML
+    private TableColumn<Restaurant, String> restaurantNameColumn;
+    @FXML
+    private TableColumn<Restaurant, String> restaurantEmailColumn;
+    @FXML
+    private TableColumn<Restaurant, String> restaurantPasswordColumn;
+    @FXML
+    private TableColumn<Restaurant, String> restaurantPhoneColumn;
+    @FXML
+    private TableColumn<Restaurant, Void> restaurantDeleteColumn;
 
     private EntityManagerFactory emf;
 
     @FXML
     public void initialize() {
 
-        // --- DEFAULT COLUMN VALUE FACTORIES ---
         restaurantIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         restaurantNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         restaurantEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         restaurantPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         restaurantPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 
-        // --- MAKE TABLE EDITABLE ---
         restaurantTableView.setEditable(true);
 
-        // === NAME COLUMN ===
         restaurantNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         restaurantNameColumn.setOnEditCommit(e -> {
             Restaurant r = e.getRowValue();
@@ -45,7 +49,6 @@ public class RestaurantTable {
             saveRestaurant(r);
         });
 
-        // === EMAIL COLUMN ===
         restaurantEmailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         restaurantEmailColumn.setOnEditCommit(e -> {
             Restaurant r = e.getRowValue();
@@ -53,7 +56,6 @@ public class RestaurantTable {
             saveRestaurant(r);
         });
 
-        // === PASSWORD COLUMN ===
         restaurantPasswordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         restaurantPasswordColumn.setOnEditCommit(e -> {
             Restaurant r = e.getRowValue();
@@ -61,7 +63,6 @@ public class RestaurantTable {
             saveRestaurant(r);
         });
 
-        // === PHONE COLUMN ===
         restaurantPhoneColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         restaurantPhoneColumn.setOnEditCommit(e -> {
             Restaurant r = e.getRowValue();
@@ -70,15 +71,12 @@ public class RestaurantTable {
         });
     }
 
-    // Called from MainForm
     public void setEntityManagerFactory(EntityManagerFactory emf) {
         this.emf = emf;
         loadData();
         setupDeleteColumn();
     }
 
-
-    // === LOAD TABLE DATA ===
     private void loadData() {
         EntityManager em = emf.createEntityManager();
         var list = em.createQuery("FROM Restaurant", Restaurant.class).getResultList();
@@ -86,8 +84,6 @@ public class RestaurantTable {
         em.close();
     }
 
-
-    // === DELETE BUTTON COLUMN ===
     private void setupDeleteColumn() {
         restaurantDeleteColumn.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button("🗑");
@@ -108,7 +104,6 @@ public class RestaurantTable {
         });
     }
 
-    // === DELETE RESTAURANT ===
     private void deleteRestaurant(Restaurant restaurant) {
         EntityManager em = emf.createEntityManager();
 
@@ -134,12 +129,8 @@ public class RestaurantTable {
         }
     }
 
-    // === SAVE TO DATABASE AFTER ENTER ===
-    private void saveRestaurant(Restaurant updated)
-    {
-
+    private void saveRestaurant(Restaurant updated) {
         EntityManager em = emf.createEntityManager();
-
         try {
             em.getTransaction().begin();
 

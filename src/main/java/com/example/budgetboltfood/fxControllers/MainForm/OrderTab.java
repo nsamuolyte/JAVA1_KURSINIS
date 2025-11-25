@@ -18,37 +18,49 @@ public class OrderTab {
     public Button editBT;
     private ChatTab chatTab;
     // === UI ===
-    @FXML private ComboBox<Driver> orderDriver;
-    @FXML private ComboBox<OrderStatus> status;
-    @FXML private ComboBox<Restaurant> restaurantPicker;
-    @FXML private ComboBox<PickUpMethod> atsiemimoBudas;
+    @FXML
+    private ComboBox<Driver> orderDriver;
+    @FXML
+    private ComboBox<OrderStatus> status;
+    @FXML
+    private ComboBox<Restaurant> restaurantPicker;
+    @FXML
+    private ComboBox<PickUpMethod> atsiemimoBudas;
 
-    @FXML private ListView<Cuisine> menu;
-    @FXML private ListView<Cuisine> order;  // krepšelis
-    @FXML private ListView<Alergens> alergenai;
-    @FXML private ListView<Cart> allOrders;
+    @FXML
+    private ListView<Cuisine> menu;
+    @FXML
+    private ListView<Cuisine> order;  // krepšelis
+    @FXML
+    private ListView<Alergens> alergenai;
+    @FXML
+    private ListView<Cart> allOrders;
 
-    @FXML private Label kainaLbl;
-    @FXML private Label kiekisLbl;
-    @FXML private Label priceValueLbl;
-    @FXML private Label quantityValueLbl;
-    @FXML private CheckBox cutleryCheck;
-    @FXML private ComboBox<Client> clientPicker;
+    @FXML
+    private Label kainaLbl;
+    @FXML
+    private Label kiekisLbl;
+    @FXML
+    private Label priceValueLbl;
+    @FXML
+    private Label quantityValueLbl;
+    @FXML
+    private CheckBox cutleryCheck;
+    @FXML
+    private ComboBox<Client> clientPicker;
 
-    @FXML private ListView<Cart> orderList;
+    @FXML
+    private ListView<Cart> orderList;
 
 
-    @FXML private Button sendOrderBtn;
+    @FXML
+    private Button sendOrderBtn;
 
     private final ObservableList<Cuisine> cartItems = FXCollections.observableArrayList();
 
-    // === INTERNAL ===
     private EntityManagerFactory emf;
     private User loggedUser;
 
-    // =====================================================================
-    // INIT
-    // =====================================================================
     public void init(EntityManagerFactory emf, User user, ChatTab chatTab) {
         this.emf = emf;
         this.loggedUser = user;
@@ -61,7 +73,6 @@ public class OrderTab {
         status.setItems(FXCollections.observableArrayList(OrderStatus.values()));
         atsiemimoBudas.setItems(FXCollections.observableArrayList(PickUpMethod.values()));
 
-        // kai pasirenkamas restoranas – užkrauti meniu
         restaurantPicker.valueProperty().addListener((obs, old, val) -> reloadMenu());
 
         if (loggedUser instanceof Admin || loggedUser instanceof Restaurant) {
@@ -79,7 +90,6 @@ public class OrderTab {
         }
         hideControlsByRole();
 
-        // meniui leisti multi select
         menu.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         menu.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -90,7 +100,6 @@ public class OrderTab {
             }
         });
 
-        // ORDER LIST VIEW = CART UI
         order.setItems(cartItems);
         order.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -105,9 +114,6 @@ public class OrderTab {
         updateCartSummary();
     }
 
-    // =====================================================================
-    // LOAD RESTAURANTS
-    // =====================================================================
     private void loadRestaurants() {
         EntityManager em = emf.createEntityManager();
         List<Restaurant> restaurants =
@@ -121,23 +127,19 @@ public class OrderTab {
         EntityManager em = emf.createEntityManager();
         List<Cart> orders;
 
-        // ADMIN + DRIVER -> visi orderiai
+
         if (loggedUser instanceof Admin || loggedUser instanceof Driver) {
             orders = em.createQuery(
                     "FROM Cart ORDER BY cartId DESC", Cart.class
             ).getResultList();
-        }
-        // RESTAURANT -> tik savo restorano orderiai
-        else if (loggedUser instanceof Restaurant) {
+        } else if (loggedUser instanceof Restaurant) {
             orders = em.createQuery(
                             "SELECT c FROM Cart c WHERE c.restaurant.id = :restId ORDER BY c.cartId DESC",
                             Cart.class
                     )
                     .setParameter("restId", loggedUser.getId())   // Restaurant user ID = restaurant ID
                     .getResultList();
-        }
-        // CLIENT -> tik savo orderiai
-        else {
+        } else {
             orders = em.createQuery(
                             "SELECT c FROM Cart c WHERE c.user.id = :uid ORDER BY c.cartId DESC",
                             Cart.class
@@ -167,23 +169,17 @@ public class OrderTab {
                     // === COLORING ===
                     if (c.getOrderStatus() == OrderStatus.CANCELLED) {
                         setStyle("-fx-text-fill: red;");
-                    }
-                    else if (c.getOrderStatus() == OrderStatus.ON_THE_WAY) {
+                    } else if (c.getOrderStatus() == OrderStatus.ON_THE_WAY) {
                         setStyle("-fx-text-fill: blue;");
-                    }
-                    else if (c.getOrderStatus() == OrderStatus.ACCEPTED) {
+                    } else if (c.getOrderStatus() == OrderStatus.ACCEPTED) {
                         setStyle("-fx-text-fill: yellow;");
-                    }
-                    else if (c.getOrderStatus() == OrderStatus.IN_PROGRESS) {
+                    } else if (c.getOrderStatus() == OrderStatus.IN_PROGRESS) {
                         setStyle("-fx-text-fill: pink;");
-                    }
-                    else if (c.getOrderStatus() == OrderStatus.DELIVERED) {
+                    } else if (c.getOrderStatus() == OrderStatus.DELIVERED) {
                         setStyle("-fx-text-fill: green;");
-                    }
-                    else if (c.getOrderStatus() == OrderStatus.READY) {
+                    } else if (c.getOrderStatus() == OrderStatus.READY) {
                         setStyle("-fx-text-fill: purple;");
-                    }
-                    else {
+                    } else {
                         setStyle(""); // normal
                     }
 
@@ -192,12 +188,6 @@ public class OrderTab {
         });
     }
 
-
-
-
-    // =====================================================================
-    // LOAD DRIVERS
-    // =====================================================================
     private void loadDrivers() {
         EntityManager em = emf.createEntityManager();
         List<Driver> drivers =
@@ -205,13 +195,13 @@ public class OrderTab {
         orderDriver.setItems(FXCollections.observableArrayList(drivers));
         em.close();
     }
+
     private void loadClients() {
         EntityManager em = emf.createEntityManager();
         List<Client> clients = em.createQuery("FROM Client", Client.class).getResultList();
         clientPicker.setItems(FXCollections.observableArrayList(clients));
         em.close();
 
-        // --- RODYMAS DROPDOWNE ---
         clientPicker.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Client c, boolean empty) {
@@ -225,7 +215,6 @@ public class OrderTab {
             }
         });
 
-        // --- RODYMAS PASIRINKTAME LANGELYJE ---
         clientPicker.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(Client c, boolean empty) {
@@ -240,10 +229,6 @@ public class OrderTab {
         });
     }
 
-
-    // =====================================================================
-    // LOAD MENU FOR SELECTED RESTAURANT
-    // =====================================================================
     private void reloadMenu() {
         Restaurant rest = restaurantPicker.getValue();
 
@@ -267,10 +252,6 @@ public class OrderTab {
         cartItems.clear();
     }
 
-
-    // =====================================================================
-    // ADD TO CART (UI ONLY, no DB)
-    // =====================================================================
     @FXML
     private void addToCart() {
 
@@ -287,10 +268,6 @@ public class OrderTab {
         showAlert("Added to cart!");
     }
 
-
-    // =====================================================================
-    // SEND ORDER (SAVE CART WITH MULTI ITEMS)
-    // =====================================================================
     @FXML
     private void sendOrder() {
 
@@ -346,18 +323,14 @@ public class OrderTab {
             showAlert("Order sent!");
 
             cartItems.clear();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             showAlert("Order failed.");
-        }
-        finally {
+        } finally {
             em.close();
         }
     }
 
-
-    // =====================================================================
     private void showAlert(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
         a.showAndWait();
@@ -368,7 +341,7 @@ public class OrderTab {
 
         Cart selectedOrder = allOrders.getSelectionModel().getSelectedItem();
         Driver selectedDriver = orderDriver.getValue();
-        OrderStatus selectedStatus = status.getValue(); // gali būti null
+        OrderStatus selectedStatus = status.getValue();
 
         if (selectedOrder == null) {
             showAlert("Please select an order first.");
@@ -388,26 +361,17 @@ public class OrderTab {
             if (selectedDriver != null) {
                 cart.setDriver(selectedDriver);
 
-                // jei PRIDEDAMAS pirmas driveris — status -> ON_THE_WAY
                 if (hadNoDriverBefore) {
                     cart.setOrderStatus(OrderStatus.ON_THE_WAY);
                 }
             }
 
-            // === UPDATE STATUS ONLY IF USER SELECTED IT ===
             if (selectedStatus != null) {
                 cart.setOrderStatus(selectedStatus);
             }
 
             em.merge(cart);
             em.getTransaction().commit();
-
-            if (chatTab != null) {
-                chatTab.addSystemMessage(
-                        "Order status updated: " + cart.getOrderStatus(),
-                        cart
-                );
-            }
 
             showAlert("Order updated!");
 
@@ -428,7 +392,6 @@ public class OrderTab {
         orderList.setItems(FXCollections.observableArrayList(carts));
         em.close();
     }
-
 
 
     private void hideControlsByRole() {
@@ -452,28 +415,25 @@ public class OrderTab {
             editBT.setManaged(false);
 
 
-
         }
 
-        // Driver (kurjeris)
         if (loggedUser instanceof Driver) {
-            // kurjeris negali rinktis driver pats
+
             orderDriver.setVisible(false);
             orderDriver.setManaged(false);
 
-            // negali pasirinkti status MANUALLY (nebent nori palikti)
             status.setVisible(false);
             status.setManaged(false);
         }
 
     }
+
     private void updateCartSummary() {
         int quantity = cartItems.size();
         double total = cartItems.stream()
                 .mapToDouble(c -> c.getPortionSize().getPrice())
                 .sum();
 
-        // cutlery kaina × patiekalų kiekis
         if (cutleryCheck.isSelected()) {
             double cutleryCost = quantity * 0.50;
             total += cutleryCost;
@@ -482,6 +442,7 @@ public class OrderTab {
         quantityValueLbl.setText(String.valueOf(quantity));
         priceValueLbl.setText(String.format("%.2f €", total));
     }
+
     @FXML
     private void canceling() {
 
@@ -539,12 +500,8 @@ public class OrderTab {
             orderDriver.setValue(null);
         }
 
-        // set status
         status.setValue(selected.getOrderStatus());
 
         showAlert("Order loaded. Make changes and press ADD to save.");
     }
-
-
-
 }

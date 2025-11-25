@@ -15,14 +15,21 @@ import javafx.scene.control.cell.TextFieldTableCell;
 
 public class DriverTable {
 
-    @FXML private TableView<Driver> driverTableView;
+    @FXML
+    private TableView<Driver> driverTableView;
 
-    @FXML private TableColumn<Driver, Integer> driverIdColumn;
-    @FXML private TableColumn<Driver, String> driverNameColumn;
-    @FXML private TableColumn<Driver, String> driverEmailColumn;
-    @FXML private TableColumn<Driver, String> driverPasswordColumn;
-    @FXML private TableColumn<Driver, String> driverPhoneColumn;
-    @FXML private TableColumn<Driver, Void> driverDeleteColumn;
+    @FXML
+    private TableColumn<Driver, Integer> driverIdColumn;
+    @FXML
+    private TableColumn<Driver, String> driverNameColumn;
+    @FXML
+    private TableColumn<Driver, String> driverEmailColumn;
+    @FXML
+    private TableColumn<Driver, String> driverPasswordColumn;
+    @FXML
+    private TableColumn<Driver, String> driverPhoneColumn;
+    @FXML
+    private TableColumn<Driver, Void> driverDeleteColumn;
 
     private EntityManagerFactory emf;
 
@@ -117,12 +124,9 @@ public class DriverTable {
     }
 
     private void saveDriver(Driver updated) {
-
         EntityManager em = emf.createEntityManager();
-
         try {
             em.getTransaction().begin();
-
             Driver db = em.find(Driver.class, updated.getId());
             if (db != null) {
                 db.setName(updated.getName());
@@ -130,11 +134,8 @@ public class DriverTable {
                 db.setPassword(updated.getPassword());
                 db.setPhoneNumber(updated.getPhoneNumber());
             }
-
             em.getTransaction().commit();
-
             System.out.println("Driver updated: " + updated.getName());
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

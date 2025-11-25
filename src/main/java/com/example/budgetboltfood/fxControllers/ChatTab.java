@@ -46,7 +46,7 @@ public class ChatTab {
                             "SELECT c FROM Cart c WHERE c.driver.id = :did", Cart.class)
                     .setParameter("did", d.getId())
                     .getResultList();
-        } else {
+        }else {
             orders = List.of();
         }
 
@@ -108,7 +108,6 @@ public class ChatTab {
                 m.setClient(order.getUser());
                 m.setRestaurant(order.getRestaurant());
             }
-
             em.persist(m);
             em.getTransaction().commit();
 
@@ -119,35 +118,4 @@ public class ChatTab {
         messageField.clear();
         loadMessages();
     }
-    public void addSystemMessage(String text, Cart order) {
-        EntityManager em = emf.createEntityManager();
-
-        try {
-            em.getTransaction().begin();
-
-            Message m = new Message();
-            m.setText("------ " + text);
-            m.setTimestamp(LocalDateTime.now());
-            m.setSenderType(SenderType.SYSTEM);
-            m.setOrder(order);
-
-            // System message has no direct sender.
-            // We still attach client, restaurant, driver for filtering:
-            m.setClient(order.getUser());
-            m.setRestaurant(order.getRestaurant());
-            m.setDriver(order.getDriver());
-
-            em.persist(m);
-
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-
-        // reload chat if the right order is visible
-        if (orderPicker.getValue() == order) {
-            loadMessages();
-        }
-    }
-
 }
