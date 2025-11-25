@@ -1,6 +1,7 @@
 package com.example.budgetboltfood.fxControllers.MainForm;
 
 import com.example.budgetboltfood.HelloApplication;
+import com.example.budgetboltfood.fxControllers.ChatTab;
 import com.example.budgetboltfood.fxControllers.UserForm;
 import com.example.budgetboltfood.model.Driver;
 import com.example.budgetboltfood.model.User;
@@ -27,6 +28,7 @@ public class MainForm {
     @FXML private Tab userManagement;
     @FXML private Tab orderManagement;
     @FXML private Tab menuManagement;
+    @FXML private Tab chatManagement;
 
     // === USER MANAGEMENT TITLED PANES ===
     @FXML private TitledPane restaurantPane;
@@ -45,6 +47,8 @@ public class MainForm {
     @FXML private Button atsijungti;
     @FXML private Button newUserAdd;
 
+    @FXML private ChatTab chatTabIncludeController;
+
     private EntityManagerFactory entityManagerFactory;
     private User loggedInUser;
 
@@ -55,6 +59,7 @@ public class MainForm {
     @FXML
     public void initialize() {
         entityManagerFactory = Persistence.createEntityManagerFactory("login");
+
 
         loadManagementPanes();  // Admin/Client/Driver/Restaurant
         loadOrderTab();         // Load Order Tab controller manually
@@ -131,7 +136,8 @@ public class MainForm {
 
             AnchorPane pane = loader.load();
             OrderTab orderController = loader.getController();
-            orderController.init(entityManagerFactory, loggedInUser);
+            orderController.init(entityManagerFactory, loggedInUser, chatTabIncludeController);
+
 
             orderTabInclude.getChildren().setAll(pane);
 
@@ -154,6 +160,8 @@ public class MainForm {
             menuTabIncludeController.init(emf, loggedInUser);
         loadOrderTab();
 
+        chatTabIncludeController.init(emf, loggedInUser);
+
         restrictAccessByRole();
     }
 
@@ -169,19 +177,19 @@ public class MainForm {
 
         switch (role) {
             case "Admin" -> {
-                mainTabPane.getTabs().setAll(userManagement, orderManagement, menuManagement);
+                mainTabPane.getTabs().setAll(userManagement, orderManagement, menuManagement, chatManagement);
             }
 
             case "Client" -> {
-                mainTabPane.getTabs().setAll(orderManagement);
+                mainTabPane.getTabs().setAll(orderManagement, chatManagement);
             }
 
             case "Driver" -> {
-                mainTabPane.getTabs().setAll(orderManagement);
+                mainTabPane.getTabs().setAll(orderManagement, chatManagement);
             }
 
             case "Restaurant" -> {
-                mainTabPane.getTabs().setAll(orderManagement, menuManagement);
+                mainTabPane.getTabs().setAll(orderManagement, menuManagement, chatManagement);
             }
         }
     }

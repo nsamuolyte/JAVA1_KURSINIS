@@ -1,5 +1,6 @@
 package com.example.budgetboltfood.fxControllers.MainForm;
 
+import com.example.budgetboltfood.fxControllers.ChatTab;
 import com.example.budgetboltfood.model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -15,6 +16,7 @@ public class OrderTab {
 
     public Button addBT;
     public Button editBT;
+    private ChatTab chatTab;
     // === UI ===
     @FXML private ComboBox<Driver> orderDriver;
     @FXML private ComboBox<OrderStatus> status;
@@ -47,9 +49,10 @@ public class OrderTab {
     // =====================================================================
     // INIT
     // =====================================================================
-    public void init(EntityManagerFactory emf, User user) {
+    public void init(EntityManagerFactory emf, User user, ChatTab chatTab) {
         this.emf = emf;
         this.loggedUser = user;
+        this.chatTab = chatTab;
 
         loadRestaurants();
         loadDrivers();
@@ -398,6 +401,13 @@ public class OrderTab {
 
             em.merge(cart);
             em.getTransaction().commit();
+
+            if (chatTab != null) {
+                chatTab.addSystemMessage(
+                        "Order status updated: " + cart.getOrderStatus(),
+                        cart
+                );
+            }
 
             showAlert("Order updated!");
 

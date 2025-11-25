@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.budgetboltfood.fxControllers.ChatTab"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <children>
+
+        <ComboBox fx:id="orderPicker"
+                  layoutX="14" layoutY="14"
+                  prefWidth="570"
+                  promptText="Select Order"/>
+
+        <ListView fx:id="chatList"
+                  layoutX="14" layoutY="50"
+                  prefWidth="570"
+                  prefHeight="340"/>
+
+        <TextField fx:id="messageField"
+                   layoutX="14" layoutY="400"
+                   prefWidth="470"
+                   promptText="Type a message"/>
+
+        <Button fx:id="sendBtn"
+                layoutX="495" layoutY="400"
+                prefWidth="90" text="Send"
+                onAction="#sendMessage"/>
+    </children>
+
+</AnchorPane>

@@ -1,6 +1,9 @@
 package com.example.budgetboltfood.model;
 
-public enum TargetType {
+public enum SenderType
+{
+    CLIENT,
     RESTAURANT,
     DRIVER,
+    SYSTEM
 }

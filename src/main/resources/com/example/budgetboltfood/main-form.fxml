@@ -55,11 +55,14 @@
                         <fx:include fx:id="menuTabInclude" source="MenuManagement.fxml" />
                     </content>
                 </Tab>
-            <Tab text="Chat Managment">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
+
+
+                <!-- CHAT MANAGEMENT TAB -->
+                <Tab fx:id="chatManagement" text="Chat Management">
+                    <content>
+                        <fx:include fx:id="chatTabInclude" source="ChatTab.fxml"/>
+                    </content>
+                </Tab>
 
             </tabs>
         </TabPane>

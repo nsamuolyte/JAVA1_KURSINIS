@@ -52,4 +52,14 @@ public class Cart {
         this.dateCreated = dateCreated;
         this.cartState = cartState;
     }
+    @Override
+    public String toString() {
+        String restName = (restaurant != null ? restaurant.getName() : "NoRestaurant");
+
+        return "#" + cartId +
+                " | €" + totalPrice +
+                " | " + orderStatus +
+                " | " + restName;
+    }
+
 }
