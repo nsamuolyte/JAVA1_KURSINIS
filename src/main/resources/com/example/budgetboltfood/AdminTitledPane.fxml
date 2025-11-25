@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.budgetboltfood.fxControllers.MainForm.AdminTable"
-            prefHeight="400" prefWidth="600">
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400" prefWidth="600" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.budgetboltfood.fxControllers.MainForm.AdminTable">
 
     <TableView fx:id="adminTableView" layoutX="0" layoutY="0" prefHeight="400" prefWidth="600">
         <columns>
-            <TableColumn fx:id="adminIdColumn" text="ID" prefWidth="60"/>
-            <TableColumn fx:id="adminNameColumn" text="NAME" prefWidth="120"/>
-            <TableColumn fx:id="adminEmailColumn" text="EMAIL" prefWidth="150"/>
-            <TableColumn fx:id="adminPasswordColumn" text="PASSWORD" prefWidth="120"/>
-            <TableColumn fx:id="adminDeleteColumn" prefWidth="73.0" text="DELETE" />
+            <TableColumn fx:id="adminIdColumn" prefWidth="60" text="ID" />
+            <TableColumn fx:id="adminNameColumn" prefWidth="155.0" text="NAME" />
+            <TableColumn fx:id="adminEmailColumn" prefWidth="155.0" text="EMAIL" />
+            <TableColumn fx:id="adminPasswordColumn" prefWidth="171.0" text="PASSWORD" />
+            <TableColumn fx:id="adminDeleteColumn" prefWidth="58.0" text="DELETE" />
         </columns>
     </TableView>
 

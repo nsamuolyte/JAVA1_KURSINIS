@@ -2,9 +2,6 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
@@ -36,12 +33,6 @@
                                     </panes>
                                 </Accordion>
 
-                                <Button fx:id="newUserAdd" layoutX="24.0" layoutY="428.0" onAction="#newUserAddBT" text="Add New" />
-
-                                <Button fx:id="Edit" layoutX="122.0" layoutY="428.0" onAction="#newUserAddBT" text="Edit" />
-
-                                <Button fx:id="Save" layoutX="220.0" layoutY="428.0" onAction="#saveBT" text="Save" />
-
                             </children>
                         </AnchorPane>
                     </content>
@@ -51,7 +42,7 @@
                 <Tab fx:id="orderManagement" text="Orders Management">
 
                     <content>
-                        <fx:include fx:id="orderTabInclude" source="OrderManagment.fxml"/>
+                        <fx:include fx:id="orderTabInclude" source="OrderManagment.fxml" />
                     </content>
 
 
@@ -72,6 +63,8 @@
 
             </tabs>
         </TabPane>
+
+              <Button fx:id="newUserAdd" layoutX="539.0" layoutY="5.0" onAction="#newUserAddBT" text="Add New" />
 
     </children>
 

@@ -1,6 +1,7 @@
 package com.example.budgetboltfood.fxControllers.MainForm;
 
 import com.example.budgetboltfood.model.Driver;
+import com.example.budgetboltfood.model.Restaurant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.collections.FXCollections;
@@ -10,6 +11,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 public class DriverTable {
 
@@ -31,6 +33,36 @@ public class DriverTable {
         driverEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         driverPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         driverPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+
+        driverTableView.setEditable(true);
+
+        driverNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        driverNameColumn.setOnEditCommit(e -> {
+            Driver d = e.getRowValue();
+            d.setName(e.getNewValue());
+            saveDriver(d);   // <- čia SAUGO Į DB
+        });
+
+        driverEmailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        driverEmailColumn.setOnEditCommit(e -> {
+            Driver d = e.getRowValue();
+            d.setEmail(e.getNewValue());
+            saveDriver(d);
+        });
+
+        driverPasswordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        driverPasswordColumn.setOnEditCommit(e -> {
+            Driver d = e.getRowValue();
+            d.setPassword(e.getNewValue());
+            saveDriver(d);
+        });
+
+        driverPhoneColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        driverPhoneColumn.setOnEditCommit(e -> {
+            Driver d = e.getRowValue();
+            d.setPhoneNumber(e.getNewValue());
+            saveDriver(d);
+        });
     }
 
     public void setEntityManagerFactory(EntityManagerFactory emf) {
@@ -83,4 +115,31 @@ public class DriverTable {
             em.close();
         }
     }
+
+    private void saveDriver(Driver updated) {
+
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+
+            Driver db = em.find(Driver.class, updated.getId());
+            if (db != null) {
+                db.setName(updated.getName());
+                db.setEmail(updated.getEmail());
+                db.setPassword(updated.getPassword());
+                db.setPhoneNumber(updated.getPhoneNumber());
+            }
+
+            em.getTransaction().commit();
+
+            System.out.println("Driver updated: " + updated.getName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
 }

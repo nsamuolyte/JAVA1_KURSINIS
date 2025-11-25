@@ -1,6 +1,8 @@
 package com.example.budgetboltfood.fxControllers.MainForm;
 
 import com.example.budgetboltfood.model.Admin;
+import com.example.budgetboltfood.model.Driver;
+import com.example.budgetboltfood.model.Restaurant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.collections.FXCollections;
@@ -10,6 +12,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 public class AdminTable {
 
@@ -30,6 +33,30 @@ public class AdminTable {
         adminNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         adminEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         adminPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+
+        adminTableView.setEditable(true);
+
+        adminNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        adminNameColumn.setOnEditCommit(e -> {
+            Admin d = e.getRowValue();
+            d.setName(e.getNewValue());
+            saveAdmin(d);   // <- čia SAUGO Į DB
+        });
+
+        adminEmailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        adminEmailColumn.setOnEditCommit(e -> {
+            Admin d = e.getRowValue();
+            d.setEmail(e.getNewValue());
+            saveAdmin(d);
+        });
+
+        adminPasswordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        adminPasswordColumn.setOnEditCommit(e -> {
+            Admin d = e.getRowValue();
+            d.setPassword(e.getNewValue());
+            saveAdmin(d);
+        });
+
     }
 
     public void setEntityManagerFactory(EntityManagerFactory emf) {
@@ -81,4 +108,31 @@ public class AdminTable {
             em.close();
         }
     }
+
+    private void saveAdmin(Admin updated)
+    {
+
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+
+            Admin db = em.find(Admin.class, updated.getId());
+            if (db != null) {
+                db.setName(updated.getName());
+                db.setEmail(updated.getEmail());
+                db.setPassword(updated.getPassword());
+            }
+
+            em.getTransaction().commit();
+
+            System.out.println("Admin updated: " + updated.getName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
 }

@@ -228,6 +228,4 @@ public class MainForm {
     @FXML public void orderManagementTab(Event e) {}
     @FXML public void menuManagementTab(Event e) {}
 
-    public void saveBT(ActionEvent event) {
-    }
 }

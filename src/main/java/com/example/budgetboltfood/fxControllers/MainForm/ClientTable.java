@@ -1,6 +1,7 @@
 package com.example.budgetboltfood.fxControllers.MainForm;
 
 import com.example.budgetboltfood.model.Client;
+import com.example.budgetboltfood.model.Driver;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.collections.FXCollections;
@@ -10,6 +11,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 public class ClientTable {
 
@@ -35,11 +37,38 @@ public class ClientTable {
         clientEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         clientPasswordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         clientPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+
+        clientTableView.setEditable(true);
+
+        clientNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        clientNameColumn.setOnEditCommit(e -> {
+            Client d = e.getRowValue();
+            d.setName(e.getNewValue());
+            saveClient(d);   // <- čia SAUGO Į DB
+        });
+
+        clientEmailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        clientEmailColumn.setOnEditCommit(e -> {
+            Client d = e.getRowValue();
+            d.setEmail(e.getNewValue());
+            saveClient(d);
+        });
+
+        clientPasswordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        clientPasswordColumn.setOnEditCommit(e -> {
+            Client d = e.getRowValue();
+            d.setPassword(e.getNewValue());
+            saveClient(d);
+        });
+
+        clientPhoneColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        clientPhoneColumn.setOnEditCommit(e -> {
+            Client d = e.getRowValue();
+            d.setPhoneNumber(e.getNewValue());
+            saveClient(d);
+        });
     }
 
-    /**
-     * DB INICIJAVIMAS TIK ČIA!
-     */
     public void setEntityManagerFactory(EntityManagerFactory emf) {
         this.emf = emf;
         loadData();
@@ -86,6 +115,32 @@ public class ClientTable {
         } catch (Exception ex) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
             ex.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    private void saveClient(Client updated) {
+
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+
+            Client db = em.find(Client.class, updated.getId());
+            if (db != null) {
+                db.setName(updated.getName());
+                db.setEmail(updated.getEmail());
+                db.setPassword(updated.getPassword());
+                db.setPhoneNumber(updated.getPhoneNumber());
+            }
+
+            em.getTransaction().commit();
+
+            System.out.println("Client updated: " + updated.getName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             em.close();
         }
