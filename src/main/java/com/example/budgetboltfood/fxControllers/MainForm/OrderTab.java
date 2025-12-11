@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -30,7 +31,7 @@ public class OrderTab {
     @FXML
     private ListView<Cuisine> menu;
     @FXML
-    private ListView<Cuisine> order;  // krepšelis
+    private ListView<Cuisine> order;
     @FXML
     private ListView<Alergens> alergenai;
     @FXML
@@ -166,7 +167,6 @@ public class OrderTab {
                                     " | " + c.getOrderStatus()
                     );
 
-                    // === COLORING ===
                     if (c.getOrderStatus() == OrderStatus.CANCELLED) {
                         setStyle("-fx-text-fill: red;");
                     } else if (c.getOrderStatus() == OrderStatus.ON_THE_WAY) {
@@ -247,8 +247,6 @@ public class OrderTab {
         menu.setItems(FXCollections.observableArrayList(cuisines));
 
         em.close();
-
-        // keičiant restoraną – išvalyti krepšelį
         cartItems.clear();
     }
 
@@ -357,7 +355,6 @@ public class OrderTab {
 
             boolean hadNoDriverBefore = (cart.getDriver() == null);
 
-            // === UPDATE DRIVER IF SELECTED ===
             if (selectedDriver != null) {
                 cart.setDriver(selectedDriver);
 
@@ -504,4 +501,53 @@ public class OrderTab {
 
         showAlert("Order loaded. Make changes and press ADD to save.");
     }
+
+    @FXML
+    public void deleted(ActionEvent event) {
+
+        Cart selected = allOrders.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Please select an order to delete.");
+            return;
+        }
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            Cart managed = em.find(Cart.class, selected.getCartId());
+            if (managed == null) {
+                showAlert("Order no longer exists.");
+                em.getTransaction().rollback();
+                return;
+            }
+
+            int cartId = managed.getCartId();
+            em.createQuery("DELETE FROM Message m WHERE m.order.cartId = :oid")
+                    .setParameter("oid", cartId)
+                    .executeUpdate();
+            em.createNativeQuery("DELETE FROM Cart_Cuisine WHERE orderList_cartId = ?")
+                    .setParameter(1, cartId)
+                    .executeUpdate();
+
+            em.remove(managed);
+
+            em.getTransaction().commit();
+
+            showAlert("Order deleted successfully!");
+
+            loadAllOrders();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            showAlert("Could not delete order.");
+        } finally {
+            em.close();
+        }
+    }
+
+
 }

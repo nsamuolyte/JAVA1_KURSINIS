@@ -16,6 +16,7 @@ module com.example.budgetboltfood {
         requires javafx.base;
 
 
+
     opens com.example.budgetboltfood to javafx.fxml, org.hibernate.orm.core, jakarta.persistence;
         exports com.example.budgetboltfood;
         opens com.example.budgetboltfood.fxControllers to javafx.fxml, org.hibernate.orm.core;

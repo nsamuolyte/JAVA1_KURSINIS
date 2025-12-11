@@ -77,6 +77,7 @@ public class MenuTab {
     private void loadRestaurants() {
         EntityManager em = emf.createEntityManager();
         List<Restaurant> list = em.createQuery("FROM Restaurant", Restaurant.class).getResultList();
+
         selectRestaurant.setItems(FXCollections.observableList(list));
         em.close();
     }
@@ -164,7 +165,6 @@ public class MenuTab {
         saveCuisine();
     }
 
-    @FXML
     public void deleteCuisine(ActionEvent event) {
 
         Cuisine selected = cuisineView.getSelectionModel().getSelectedItem();
@@ -182,17 +182,30 @@ public class MenuTab {
             em.getTransaction().begin();
 
             Cuisine managed = em.find(Cuisine.class, selected.getCuisineId());
-            if (managed != null) {
-                em.remove(managed);
+            if (managed == null) {
+                em.getTransaction().rollback();
+                return;
             }
+            em.createNativeQuery("DELETE FROM Cart_Cuisine WHERE menu_cuisineId = ?")
+                    .setParameter(1, managed.getCuisineId())
+                    .executeUpdate();
+            em.remove(managed);
 
             em.getTransaction().commit();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Delete failed");
+            alert.setContentText("Could not delete dish (it might be used in orders).");
+            alert.showAndWait();
         } finally {
             em.close();
         }
 
         refreshMenuList();
     }
-
 }

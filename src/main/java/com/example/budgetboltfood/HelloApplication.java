@@ -13,7 +13,7 @@ public class HelloApplication extends Application {
     {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-form.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("PRISIJUNGIMAS");
+        stage.setTitle("LOG IN");
         stage.setScene(scene);
         stage.show();
     }

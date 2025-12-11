@@ -140,6 +140,11 @@ public class MainForm {
     private void restrictAccessByRole() {
         if (loggedInUser == null) return;
         String role = loggedInUser.getClass().getSimpleName();
+
+        boolean isAdmin = role.equals("Admin");
+        newUserAdd.setVisible(isAdmin);
+        newUserAdd.setManaged(isAdmin);
+
         switch (role) {
             case "Admin" -> {
                 mainTabPane.getTabs().setAll(userManagement, orderManagement, menuManagement);
@@ -162,6 +167,7 @@ public class MainForm {
             FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("login-form.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) atsijungti.getScene().getWindow();
+            stage.setTitle("LOG IN");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -193,7 +199,6 @@ public class MainForm {
     @FXML
     public void orderManagementTab(Event e) {
     }
-
     @FXML
     public void menuManagementTab(Event e) {
     }
